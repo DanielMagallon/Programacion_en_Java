@@ -27,10 +27,13 @@ import java.util.Random;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
-
+/**
+ * 
+ * @author Yeo
+ *	Contenido en github
+ */
 public class Apuestas extends Applet
 {
-	
 	private static final long serialVersionUID = -1862330924066930967L;
 	
 	Button btnTirar;
