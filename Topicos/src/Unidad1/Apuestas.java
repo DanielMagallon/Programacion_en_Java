@@ -30,7 +30,7 @@ import javax.swing.Timer;
 /**
  * 
  * @author Yeo
- *	Contenido en github
+ *	Contenido en github, modificado2
  */
 public class Apuestas extends Applet
 {
