@@ -13,6 +13,8 @@ import java.awt.Image;
 import java.awt.Label;
 import java.awt.Panel;
 import java.awt.TextField;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -196,7 +198,7 @@ public class Apuestas extends Applet
 
 	Color color = Color.LIGHT_GRAY;
 	@SuppressWarnings("serial")
-	class PanelApuesta extends Panel
+	class PanelApuesta extends Panel implements FocusListener
 	{
 		
 		Font cambria = new Font("Cambria Math",Font.BOLD|Font.ITALIC,38);
@@ -205,7 +207,9 @@ public class Apuestas extends Applet
 		{
 			addMouseListener(new Adapter());
 			addKeyListener(new Key());
+			addFocusListener(this);
 		}
+		
 		
 	
 		@Override
@@ -226,7 +230,7 @@ public class Apuestas extends Applet
 				g.drawRect(325, 400, 150, 40);
 				g.drawString("Tirar", 350, 435);
 				
-				if(contorno)
+				if(contorno )
 				{
 					 Graphics2D g2d=(Graphics2D)g;
 					       
@@ -267,14 +271,23 @@ public class Apuestas extends Applet
 			@Override
 			public void keyTyped(KeyEvent e) 
 			{
-				if(e.getKeyChar() == KeyEvent.VK_ENTER)
-				{
-					if(x>=325 && x<=475 && y>=400 && y<=450)
-					{
-						moverDados();
-					}
-				}
+					if(e.getKeyChar() == KeyEvent.VK_ENTER)
+						if(x>=325 && x<=475 && y>=400 && y<=450)
+							moverDados();
 			}
+		}
+
+		@Override
+		public void focusGained(FocusEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void focusLost(FocusEvent e) {
+			// TODO Auto-generated method stub
+			contorno = false;
+			repaint();
 		}
 	}
 
