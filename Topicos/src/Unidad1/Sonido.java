@@ -14,7 +14,7 @@ public class Sonido extends Applet
 	public void init() 
 	{
 		setSize(600,400);
-		URL url = getClass().getResource("/Unidad1/Recursos/photon.wav");
+		URL url = getClass().getResource("/Unidad1/Recursos/musica.wav");
 		audio = getAudioClip(url);
 		
 		bPlay = new Button("Play"); 

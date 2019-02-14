@@ -14,9 +14,15 @@ import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("serial")
-public class Practica1 extends Applet implements AdjustmentListener, ItemListener
+public class Practica extends Applet implements AdjustmentListener, ItemListener
 {
 	String cad;
 	Scrollbar sc;
