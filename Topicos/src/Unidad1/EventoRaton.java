@@ -75,7 +75,7 @@ public class EventoRaton extends Applet implements MouseListener, MouseWheelList
 	}
 	
 	class Motion extends MouseMotionAdapter{
-		
+		 
 		@Override
 		public void mouseDragged(MouseEvent e) 
 		{

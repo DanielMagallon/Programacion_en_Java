@@ -85,6 +85,7 @@ public class Ejecutable extends JFrame {
 		btnGenera.setEnabled(true);
 		btnCrearLan.setEnabled(true);
 		txtNumero.setEditable(true);
+		
 	}
 	
 	static
