@@ -2,7 +2,9 @@ package DiseñoAjedrez;
 
 import java.awt.Color;
 
+import Abstract.Variables;
 import Diseños.Tablero;
+
 
 public class TableroAjedrez extends Tablero 
 {
@@ -24,8 +26,8 @@ public class TableroAjedrez extends Tablero
 	{
 		casillasAj[i][j] = new CasillaAjedrez();
 		casillasAj[i][j].setBackground((pintado) ? firstColor : secondColor);
-		
-		add(casillasAj[i][j]);
+		casillasAj[i][j].putPiece(Variables.reina, Variables.JUGADOR_BLANCAS);
+		panelJuego.add(casillasAj[i][j]);
 	}
 	
 	@Override
