@@ -1,6 +1,6 @@
 package Abstract;
 
-import javax.swing.Icon;
+import java.awt.Image;
 
 public abstract class Pieza 
 {
@@ -14,7 +14,7 @@ public abstract class Pieza
 		val = valor;
 	}
 	
-	public abstract Icon getPieza(int player);
+	public abstract Image getPieza(int player);
 	public abstract void movimiento(int f, int c);
 	
 }

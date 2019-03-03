@@ -3,25 +3,25 @@ package PerfomanceAjedrez;
 
 import Abstract.Pieza;
 
-import static Abstract.Variables.reinaJ1;
-import static Abstract.Variables.reinaJ2;
+import static Abstract.Variables.alfilJ1;
+import static Abstract.Variables.alfilJ2;
 
 import java.awt.Image;
 
+
 import static Abstract.Variables.JUGADOR_BLANCAS;
 
-public class Reina extends Pieza 
+public class Alfil extends Pieza 
 {
-	
-	public Reina(int val) 
+	public Alfil(int val) 
 	{
-		super("Reina","D",val);
+		super("Alfil","A",val);
 	}
 	
 	@Override
 	public Image getPieza(int player) 
 	{
-		return (player == JUGADOR_BLANCAS ) ? reinaJ1 : reinaJ2;
+		return player == JUGADOR_BLANCAS ? alfilJ1 : alfilJ2;
 	}
 	
 	@Override

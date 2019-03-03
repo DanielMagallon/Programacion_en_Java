@@ -1,8 +1,10 @@
-package DiseñoAjedrez;
+package DiseÃ±oAjedrez;
 
+
+import javax.swing.ImageIcon;
 
 import Abstract.Pieza;
-import Diseños.Casilla;
+import DiseÃ±os.Casilla;
 
 public class CasillaAjedrez extends Casilla
 {
@@ -15,6 +17,7 @@ public class CasillaAjedrez extends Casilla
 	
 	public void putPiece(Pieza pieza, int player)
 	{
-		setIcon( pieza == null ? null : pieza.getPieza(player));
+		setIcon(new ImageIcon(pieza == null ? null : pieza.getPieza(player)));
+		
 	}
 }

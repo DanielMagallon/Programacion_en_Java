@@ -1,8 +1,9 @@
-package Diseños;
+package DiseÃ±os;
 
 import java.awt.Color;
 
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.JLabel;
 
 public class Casilla extends JLabel 
@@ -11,7 +12,9 @@ public class Casilla extends JLabel
 
 	public Casilla() 
 	{
+		setHorizontalAlignment(CENTER);
 		setBorder(BorderFactory.createLineBorder(Color.black));
 		setOpaque(true);
 	}
+	
 }
