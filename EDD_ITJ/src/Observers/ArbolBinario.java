@@ -479,7 +479,7 @@ public class ArbolBinario
 	
 	ArrayList<NodoArbol> nodosHoja = new ArrayList<>();
 	
-	public int eliminarHojaMasPequeña()
+	public int eliminarHojaMasPequena()
 	{
 		nodosHoja.clear();
 		localizarNodosHoja(raiz.hijoDerecho);
@@ -558,18 +558,18 @@ public class ArbolBinario
 //		arbol.mostrarHijosDeNodo(80);
 //		System.out.println();
 //		
-//		eliminandoHojaPequeña();
-//		eliminandoHojaPequeña();
-//		eliminandoHojaPequeña();
-//		eliminandoHojaPequeña();
+//		eliminandoHojaPequena();
+//		eliminandoHojaPequena();
+//		eliminandoHojaPequena();
+//		eliminandoHojaPequena();
 //		
 	}
 	
-	static void eliminandoHojaPequeña()
+	static void eliminandoHojaPequena()
 	{
-		int val = arbol.eliminarHojaMasPequeña();
+		int val = arbol.eliminarHojaMasPequena();
 		
-		System.out.println("\nELiminando hoja mas pequeña de la rama derecha... ");
+		System.out.println("\nELiminando hoja mas pequena de la rama derecha... ");
 		if(val==-1)
 		{
 			System.out.println("No es posible eliminar mas hojas");

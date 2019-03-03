@@ -5,9 +5,9 @@ public class ColaVector
 	String filaPersonas[];
 	int pos;
 			
-	public ColaVector(int tamaño)
+	public ColaVector(int tamanio)
 	{
-		filaPersonas = new String[tamaño];
+		filaPersonas = new String[tamanio];
 		pos=-1;
 	}
 	

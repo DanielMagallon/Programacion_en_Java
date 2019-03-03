@@ -9,9 +9,9 @@ public class BiCola<E>
 
 	Object cola[];
 			
-	public BiCola(int tamaño)
+	public BiCola(int tamanio)
 	{
-		cola = new Object[tamaño];
+		cola = new Object[tamanio];
 		fin=-1;
 	}
 	

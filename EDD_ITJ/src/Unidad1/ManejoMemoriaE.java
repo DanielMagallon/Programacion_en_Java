@@ -4,7 +4,7 @@ import java.util.Random;
 
 class DefineVector
 {
-	int tamañoBytes, direccionMemoria, dirIni;
+	int tamanioBytes, direccionMemoria, dirIni;
 	int arreglo[] = new int[10];
 //	static final int BYTE = 1;
 //	static final int CHAR = 2;
@@ -18,7 +18,7 @@ class DefineVector
 	
 	public DefineVector(int direccIni) 
 	{
-		tamañoBytes = 4;
+		tamanioBytes = 4;
 		dirIni = direccIni;
 		random();
 		determinarDirecciones();
@@ -47,7 +47,7 @@ class DefineVector
 	{
 		for(int i=1; i<arreglo.length; i+=2)
 		{
-			direccionMemoria = dirIni + i * tamañoBytes;
+			direccionMemoria = dirIni + i * tamanioBytes;
 			System.out.printf ("Direccion memoria del # %d = %d\n",arreglo[i],direccionMemoria);
 		}
 	}

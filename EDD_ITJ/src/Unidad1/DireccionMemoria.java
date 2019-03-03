@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class DireccionMemoria
 {
-	static int tamañoBytes, direccionMemoria, dirIni;
+	static int tamanioBytes, direccionMemoria, dirIni;
 	
 	static char vecC[];
 	static double vecDo[];
@@ -25,7 +25,7 @@ public class DireccionMemoria
 	
 	static Random lb = new Random();
 	 
-	public static void vector(int tipo, int tamaño, int direccionIni)
+	public static void vector(int tipo, int tamanio, int direccionIni)
 	{
 		dirIni = direccionIni;
 		
@@ -33,43 +33,43 @@ public class DireccionMemoria
 		{
 			case TYPE_BYTE:
 				esDecimal=false;
-				tamañoBytes = BYTE;
-				vecDo = new double[tamaño];
+				tamanioBytes = BYTE;
+				vecDo = new double[tamanio];
 				break;
 				
 			case TYPE_CHAR:
-				tamañoBytes = CHAR;
-				vecC = new char[tamaño];
+				tamanioBytes = CHAR;
+				vecC = new char[tamanio];
 				break;
 				
 			case TYPE_SHORT:
 				esDecimal=false;
-				tamañoBytes = SHORT;
-				vecDo = new double[tamaño];
+				tamanioBytes = SHORT;
+				vecDo = new double[tamanio];
 				break;
 				
 			case TYPE_INT:
 				esDecimal=false;
-				tamañoBytes = INT;
-				vecDo = new double[tamaño];
+				tamanioBytes = INT;
+				vecDo = new double[tamanio];
 				break;
 				
 			case TYPE_FLOAT:
 				esDecimal=true;
-				tamañoBytes = FLOAT;
-				vecDo = new double[tamaño];
+				tamanioBytes = FLOAT;
+				vecDo = new double[tamanio];
 				break;
 				
 			case TYPE_LONG:
 				esDecimal=false;
-				tamañoBytes = LONG;
-				vecDo = new double[tamaño];
+				tamanioBytes = LONG;
+				vecDo = new double[tamanio];
 				break;
 			
 			case TYPE_DOUBLE:
 				esDecimal=true;
-				tamañoBytes = DOUBLE;
-				vecDo = new double[tamaño];
+				tamanioBytes = DOUBLE;
+				vecDo = new double[tamanio];
 		}
 		
 		llenarAleatorio();
@@ -84,42 +84,42 @@ public class DireccionMemoria
 		{
 			case TYPE_BYTE:
 				esDecimal=false;
-				tamañoBytes = BYTE;
+				tamanioBytes = BYTE;
 				matrizDouble = new double[filas][columnas];
 				break;
 				
 			case TYPE_CHAR:
-				tamañoBytes = CHAR;
+				tamanioBytes = CHAR;
 				matrizChar = new char[filas][columnas];
 				break;
 				
 			case TYPE_SHORT:
 				esDecimal=false;
-				tamañoBytes = SHORT;
+				tamanioBytes = SHORT;
 				matrizDouble = new double[filas][columnas];
 				break;
 				
 			case TYPE_INT:
 				esDecimal=false;
-				tamañoBytes = INT;
+				tamanioBytes = INT;
 				matrizDouble = new double[filas][columnas];
 				break;
 				
 			case TYPE_FLOAT:
 				esDecimal=true;
-				tamañoBytes = FLOAT;
+				tamanioBytes = FLOAT;
 				matrizDouble = new double[filas][columnas];
 				break;
 				
 			case TYPE_LONG:
 				esDecimal=false;
-				tamañoBytes = LONG;
+				tamanioBytes = LONG;
 				matrizDouble = new double[filas][columnas];
 				break;
 			
 			case TYPE_DOUBLE:
 				esDecimal=true;
-				tamañoBytes = DOUBLE;
+				tamanioBytes = DOUBLE;
 				matrizDouble = new double[filas][columnas];
 		}
 		
@@ -225,7 +225,7 @@ public class DireccionMemoria
 		if(vecC!=null)
 		for(int i=0; i<vecC.length; i++)
 		{
-			direccionMemoria = dirIni + i * tamañoBytes;
+			direccionMemoria = dirIni + i * tamanioBytes;
 			System.out.printf ("Direccion memoria del elemento %c en posicion[%d] = %d\n",
 								vecC[i],i,direccionMemoria);
 		}
@@ -234,7 +234,7 @@ public class DireccionMemoria
 		{
 			for(int i=0; i<vecDo.length; i++)
 			{
-				direccionMemoria = dirIni + i * tamañoBytes;
+				direccionMemoria = dirIni + i * tamanioBytes;
 				System.out.printf ("Direccion memoria del elemento %.2f en posicion[%d] = %d\n",
 									vecDo[i],i,direccionMemoria);
 			}
@@ -252,7 +252,7 @@ public class DireccionMemoria
 			for(i=0; i<matrizChar.length; i++)
 				for(j=0; j<matrizChar[i].length; j++)
 				{
-					//dirInicial + (numero de rengons array*posIndCol+posIndRen)*tamañoBytes-
+					//dirInicial + (numero de rengons array*posIndCol+posIndRen)*tamanioBytes-
 					calcularDirMemBidi(matrizChar.length, j, i);
 					System.out.printf("[%d][%d]-> %c = Direccion Memoria: %d\n",i,j,
 										matrizChar[i][j],direccionMemoria);
@@ -263,7 +263,7 @@ public class DireccionMemoria
 			for(i=0; i<matrizDouble.length; i++)
 				for(j=0; j<matrizDouble[i].length; j++)
 				{
-					//dirInicial + (numero de rengons array*posIndCol+posIndRen)*tamañoBytes-
+					//dirInicial + (numero de rengons array*posIndCol+posIndRen)*tamanioBytes-
 					calcularDirMemBidi(matrizDouble.length, j, i);
 					System.out.printf("[%d][%d]-> %.2f = Direccion Memoria: %d\n",i,j,
 										matrizDouble[i][j],direccionMemoria);
@@ -281,7 +281,7 @@ public class DireccionMemoria
 			for(i=0; i<matrizChar.length; i++)
 				for(j=0; j<matrizChar[i].length; j++)
 				{
-					//dirInicial + (numero de columnas array*posIndRenglon+posIndCol)*tamañoBytes-
+					//dirInicial + (numero de columnas array*posIndRenglon+posIndCol)*tamanioBytes-
 					calcularDirMemBidi(matrizChar[i].length, i, j);
 					System.out.printf("[%d][%d]-> %c = Direccion Memoria: %d\n",i,j,
 										matrizChar[i][j],direccionMemoria);
@@ -292,7 +292,7 @@ public class DireccionMemoria
 			for(i=0; i<matrizDouble.length; i++)
 				for(j=0; j<matrizDouble[i].length; j++)
 				{
-					//dirInicial + (numero de columnas array*posIndRenglon+posIndCol)*tamañoBytes-
+					//dirInicial + (numero de columnas array*posIndRenglon+posIndCol)*tamanioBytes-
 					calcularDirMemBidi(matrizDouble[i].length, i, j);
 					System.out.printf("[%d][%d]-> %.2f = Direccion Memoria: %d\n",i,j,
 										matrizDouble[i][j],direccionMemoria);
@@ -302,7 +302,7 @@ public class DireccionMemoria
 	
 	private static void calcularDirMemBidi(int n_columnas, int posIndRenglon, int posIndCol)
 	{
-		direccionMemoria = dirIni + (n_columnas*posIndRenglon+posIndCol) * tamañoBytes;
+		direccionMemoria = dirIni + (n_columnas*posIndRenglon+posIndCol) * tamanioBytes;
 	}
 	
 	//1er elemento -> 8 + 1 return i; (9)
@@ -381,7 +381,7 @@ public class DireccionMemoria
 		// TYPE_BYTE = 0, TYPE_CHAR=1, TYPE_SHORT=2, TYPE_INT=3, TYPE_FLOAT=4,TYPE_LONG=5, TYPE_DOUBLE=6;
 		//estas variables eestan declaradas en la misma clases, de manera estatica (static)
 		
-		//El 2 parametri es para darle el tamaño al vector
+		//El 2 parametri es para darle el tamanio al vector
 		
 		//El tercer parametro es para darle la direccion de memoria Inicial, con la cual hara los calculos
 		

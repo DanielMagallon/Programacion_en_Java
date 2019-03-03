@@ -173,12 +173,12 @@ public class VectorOperation
 		}
 	}
 	
-	public int obtenTamaño()
+	public int obtenTamanio()
 	{
 		return index;
 	}
 	
-	public int obtenTamañoVector()
+	public int obtenTamanioVector()
 	{
 		return vector.length;
 	}
@@ -208,45 +208,45 @@ public class VectorOperation
 		
 		vec.mostrar();
 		
-//		System.out.println("Vecotr.lengt: "+vec.obtenTamaño());
-//		System.out.println("Vector.length real: "+vec.obtenTamañoVector());
+//		System.out.println("Vecotr.lengt: "+vec.obtenTamanio());
+//		System.out.println("Vector.length real: "+vec.obtenTamanioVector());
 		
 		vec.eliminar(1);
 		vec.eliminar(3);
 		vec.mostrar();
-//		System.out.println("Vecotr.lengt: "+vec.obtenTamaño());
-//		System.out.println("Vector.length real: "+vec.obtenTamañoVector());
+//		System.out.println("Vecotr.lengt: "+vec.obtenTamanio());
+//		System.out.println("Vector.length real: "+vec.obtenTamanioVector());
 		vec.agregar(4);
 		vec.mostrar();
-//		System.out.println("Vecotr.lengt: "+vec.obtenTamaño());
-//		System.out.println("Vector.length real: "+vec.obtenTamañoVector());
+//		System.out.println("Vecotr.lengt: "+vec.obtenTamanio());
+//		System.out.println("Vector.length real: "+vec.obtenTamanioVector());
 		vec.agregar(new int[]{1,1,8});
 		vec.mostrar();
 		
 		System.out.printf("\nHay %d conjuntos seguidos de 3-3\n\n",vec.subConj(3,3));
 		
-//		System.out.println("Vecotr.lengt: "+vec.obtenTamaño());
-//		System.out.println("Vector.length real: "+vec.obtenTamañoVector());
+//		System.out.println("Vecotr.lengt: "+vec.obtenTamanio());
+//		System.out.println("Vector.length real: "+vec.obtenTamanioVector());
 		
 		vec.agregar(2,2,11,10,32,24);
 		vec.mostrar();
 		
 		System.out.printf ("\nHay %d numeros pares\n",vec.pares());
 		
-//		System.out.println("Vecotr.lengt: "+vec.obtenTamaño());
-//		System.out.println("Vector.length real: "+vec.obtenTamañoVector());
+//		System.out.println("Vecotr.lengt: "+vec.obtenTamanio());
+//		System.out.println("Vector.length real: "+vec.obtenTamanioVector());
 		vec.eliminar(1);
 		vec.mostrar();
-//		System.out.println("Vecotr.lengt: "+vec.obtenTamaño());
-//		System.out.println("Vector.length real: "+vec.obtenTamañoVector());
+//		System.out.println("Vecotr.lengt: "+vec.obtenTamanio());
+//		System.out.println("Vector.length real: "+vec.obtenTamanioVector());
 		vec.agregar(1);
 		vec.agregar(1);
 		vec.agregar(3);
 		vec.agregar(new int[]{32,21,8});
 		vec.agregar(6);
 		vec.mostrar();
-//		System.out.println("Vecotr.lengt: "+vec.obtenTamaño());
-//		System.out.println("Vector.length real: "+vec.obtenTamañoVector());
+//		System.out.println("Vecotr.lengt: "+vec.obtenTamanio());
+//		System.out.println("Vector.length real: "+vec.obtenTamanioVector());
 		
 		System.out.printf ("\nHay %d numeros pares\n",vec.pares());
 		System.out.printf("\nHay %d numeros mayores a %d\n",vec.numerosMayoresA(10),10);

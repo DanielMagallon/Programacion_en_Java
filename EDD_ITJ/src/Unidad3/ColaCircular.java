@@ -3,12 +3,12 @@ package Unidad3;
 public class ColaCircular<E>
 {
 	E dato;
-	int tamaño, inicio, fin;
+	int tamanio, inicio, fin;
 	Object elements[];
 	
 	public ColaCircular(int tam)
 	{
-		tamaño = tam;
+		tamanio = tam;
 		elements = new Object[tam];
 		inicio = fin = -1;
 	}

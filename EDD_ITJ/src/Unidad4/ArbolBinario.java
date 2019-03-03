@@ -519,7 +519,7 @@ public class ArbolBinario
 	}
 	
 	NodoArbol nodo;
-	public void hojaPequeña()
+	public void hojaPequenia()
 	{
 		if(raiz!=null)
 		{
@@ -529,7 +529,7 @@ public class ArbolBinario
 			recorrido(raiz);
 			elimnarSinHijos(nodo);
 			System.out.println("SE elimino el el nodo hoja: "+nodo);
-			hojaPequeña();
+			hojaPequenia();
 		}
 		else{
 			System.out.println("Ya no hay mas hojass que eliminar, raiz nula");
