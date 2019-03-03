@@ -9,7 +9,7 @@ import java.awt.Scrollbar;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 
-public class ScrollTamaño extends Applet implements AdjustmentListener
+public class ScrollTamaÃ±o extends Applet implements AdjustmentListener
 {
 	int ancho=30,alto=30;
 	Scrollbar scAncho = new Scrollbar(Scrollbar.HORIZONTAL,ancho,10,0,310);
