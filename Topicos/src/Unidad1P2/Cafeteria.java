@@ -34,7 +34,7 @@ public class Cafeteria extends JFrame implements ItemListener
 	TablaSer tabla;
 	JLabel lbl = new JLabel("Nombre del cliente:");
 	JTextField txt = new JTextField(10);
-	JButton btnAdd = new JButton("Agregar");
+	JButton btnAdd = new JButton("Agregar nuevo");
 	JButton btnSave = new JButton("Guardar");
 	double total;
 	
