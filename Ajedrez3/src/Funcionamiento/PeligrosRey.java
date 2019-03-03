@@ -64,7 +64,7 @@ public class PeligrosRey
 	
 	public ArrayList<CasillaData> casillasAmenaza = new ArrayList<>();
 	
-	public void añadeCasillas(Position pos)
+	public void anadeCasillas(Position pos)
 	{
 		int k,l,i;
 		casillasAmenaza.clear();
