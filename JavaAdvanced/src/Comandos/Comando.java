@@ -51,31 +51,32 @@ public class Comando
 //	    	System.out.println (ioe);
 //	    }
 		
-		StringBuilder comando = new StringBuilder(
+		StringBuilder comando;
+		comando = new StringBuilder(
 				
 //				"mkdir nueva"//crea una carpeta en la ruta del proyecto
 //				"git add Comandos"
-				"git add /home/yeo/git_works/Programacion_en_Java/JavaAdvanced/src/Comandos\n"
+				"git add /home/yeo/git_works/Programacion_en_Java/JavaAdvanced/src/Comandos/Comando.java\n"
 //				"touch h.java"
 				
 				);
 		crear(comando);
-		
-		
-		
+//		
+//		
+//		
 		comando = new StringBuilder(
 				
-				"git commit -m \"com\" /home/yeo/git_works/Programacion_en_Java/JavaAdvanced/src/Comandos"
+				"git commit -m \"com\" /home/yeo/git_works/Programacion_en_Java/JavaAdvanced/src/Comandos/Comando.java"
 				
 				);
 		crear(comando);
 //		
-//		comando = new StringBuilder(
-//				
-//				"git push -u origin master"
-//				
-//				);
-//		crear(comando);
+		 comando = new StringBuilder(
+				
+//				"git /home/yeo/git_works/Programacion_en_Java/JavaAdvanced/src/Comandos push -u origin master "
+				
+				);
+		crear(comando);
 //		
 	}
 }
