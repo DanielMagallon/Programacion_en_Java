@@ -42,6 +42,9 @@ public class Comando
 	
 	public static void main(String[] args) throws IOException 
 	{
+		
+		long x = 10000;
+		System.out.println(x*x);
 //	    try 
 //	    {
 //	    	String cmd = "halt"; //Comando de apagado en linux
