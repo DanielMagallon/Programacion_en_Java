@@ -2,9 +2,7 @@ package Unidad1P2;
 
 import java.io.Serializable;
 
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 public class TablaSer extends JTable implements Serializable 
@@ -12,6 +10,7 @@ public class TablaSer extends JTable implements Serializable
 	
 	private static final long serialVersionUID = 4574811437561562436L;
 	DefaultTableModel moddelo = new DefaultTableModel();
+	
 	
 	public TablaSer() 
 	{

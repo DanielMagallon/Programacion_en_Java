@@ -43,7 +43,7 @@ public class Comando
 	public static void main(String[] args) throws IOException 
 	{
 		
-		long x = 10000;
+		long x=1111111;//
 		System.out.println(x*x);
 //	    try 
 //	    {
@@ -54,32 +54,32 @@ public class Comando
 //	    	System.out.println (ioe);
 //	    }
 		
-		StringBuilder comando;
-		comando = new StringBuilder(
-				
-//				"mkdir nueva"//crea una carpeta en la ruta del proyecto
-//				"git add Comandos"
-				"git add /home/yeo/git_works/Programacion_en_Java/JavaAdvanced/src/Comandos/Comando.java\n"
-//				"touch h.java"
-				
-				);
-		crear(comando);
-//		
-//		
-//		
-		comando = new StringBuilder(
-				
-				"git commit -m \"com\" /home/yeo/git_works/Programacion_en_Java/JavaAdvanced/src/Comandos/Comando.java"
-				
-				);
-		crear(comando);
-//		
-		 comando = new StringBuilder(
-				
-//				"git /home/yeo/git_works/Programacion_en_Java/JavaAdvanced/src/Comandos push -u origin master "
-				
-				);
-		crear(comando);
-//		
+//		StringBuilder comando;
+//		comando = new StringBuilder(
+//				
+////				"mkdir nueva"//crea una carpeta en la ruta del proyecto
+////				"git add Comandos"
+//				"git add /home/yeo/git_works/Programacion_en_Java/JavaAdvanced/src/Comandos/Comando.java\n"
+////				"touch h.java"
+//				
+//				);
+//		crear(comando);
+////		
+////		
+////		
+//		comando = new StringBuilder(
+//				
+//				"git commit -m \"com\" /home/yeo/git_works/Programacion_en_Java/JavaAdvanced/src/Comandos/Comando.java"
+//				
+//				);
+//		crear(comando);
+////		
+//		 comando = new StringBuilder(
+//				
+////				"git /home/yeo/git_works/Programacion_en_Java/JavaAdvanced/src/Comandos push -u origin master "
+//				
+//				);
+//		crear(comando);
+////		
 	}
 }

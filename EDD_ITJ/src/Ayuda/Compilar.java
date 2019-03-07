@@ -12,6 +12,7 @@ import javax.tools.ToolProvider;
 
 public class Compilar
 {
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static void main(String[] args) throws IOException
 	{
@@ -27,14 +28,14 @@ public class Compilar
 	    sourceFileList.add(new File(sourceFile));
 	    Iterable compilationUnits = fileManager
 	        .getJavaFileObjectsFromFiles(sourceFileList);
-	    //Obtenemos la tarea de compilación a ejecutar posteriormente
+	    //Obtenemos la tarea de compilaciï¿½n a ejecutar posteriormente
 	    CompilationTask task = compiler.getTask(null, fileManager, null, null, null, compilationUnits);
 	    //Ejecutamos la tarea
 	    boolean result = task.call();
 	    if (result) 
-	      System.out.println("La compilación ha sido exitosa");
+	      System.out.println("La compilaciï¿½n ha sido exitosa");
 	    else 
-	      System.out.println("La compilación ha fallado");
+	      System.out.println("La compilaciï¿½n ha fallado");
  
 	    fileManager.close();
 	}
