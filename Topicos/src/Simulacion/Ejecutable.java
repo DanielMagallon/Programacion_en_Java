@@ -6,45 +6,41 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 public class Ejecutable extends JFrame implements ItemListener, ActionListener
 {
 
-	JRadioButton cuadradosMedios,productosMedios,multipliConst;
+	MyRaddioButton cuadradosMedios,productosMedios,multipliConst,lineal,congruencialMult;
 	JButton ejecutar;
 	TablaDatos tabla;
 	CuadradosMedios cmedios;
 	ProductosMedios pmedios;
 	MultiplicadorConstante multCons;
+	LinealCongruencial lc;
+	JPanel panelTabla;
+	AbstractCalculo refer;
 	
 	public Ejecutable() 
 	{
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(700, 700);
-		setLocationRelativeTo(null);
+		setExtendedState(MAXIMIZED_BOTH);
 		setLayout(new BorderLayout());
 		
 		init();
 		
-		JPanel panelTabla = new JPanel();
-		JScrollPane sc = new JScrollPane
-				(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		
+		panelTabla = new JPanel();
 		{
-			sc.setViewportView(tabla = new TablaDatos());
 			panelTabla.setLayout(new GridLayout(1,1));
-			panelTabla.add(sc);
+			panelTabla.add(tabla = new TablaDatos());
 			
 			add(panelTabla,"Center");
 		}
@@ -55,6 +51,8 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 			panelBotones.add(cuadradosMedios);
 			panelBotones.add(productosMedios);
 			panelBotones.add(multipliConst);
+			panelBotones.add(lineal);
+			panelBotones.add(congruencialMult);
 			
 			add(panelBotones,"North");
 		}
@@ -66,33 +64,53 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 			
 			add(panelEje,"South");
 		}
+		
+		
+		tabla.habilitar(cuadradosMedios.buttons);
+		tabla.crearColumnas(columnas[0]);
+		refer = cmedios;
 	}
 	
 
 	private void init()
 	{
-		cuadradosMedios = new JRadioButton("Cuadrados medios");
+		cmedios = new CuadradosMedios();
+		pmedios = new ProductosMedios();
+		multCons = new MultiplicadorConstante();
+		lc =  new LinealCongruencial();		
+		
+		cuadradosMedios = new MyRaddioButton("Cuadrados medios",0,cmedios,"Semilla","Nro. semillas");
+		cuadradosMedios.setSelected(true);
 		cuadradosMedios.addItemListener(this);
 		
-		productosMedios = new JRadioButton("Productos Medios");
+		productosMedios = new MyRaddioButton("Productos Medios",1,pmedios,"Semilla","Semilla2",
+				"Nro. semillas");
 		productosMedios.addItemListener(this);
 		
-		multipliConst = new JRadioButton("Multiplicador constante");
+		multipliConst = new MyRaddioButton("Multiplicador constante",2,multCons,"Constante","Semilla"
+				,"Nro. semillas");
 		multipliConst.addItemListener(this);
+		
+		
+		lineal = new MyRaddioButton("Lineal",3,lc,"a","Semilla","c","Modulo","Nro. semillas");
+		lineal.addItemListener(this);
+		
+		congruencialMult = new MyRaddioButton("Congruencial multiplicativo",4,lc,
+							"a","Semilla","Modulo","Nro. semillas");
+		congruencialMult.addItemListener(this);
+		
 		
 		ejecutar = new JButton("Ejecutar");
 		ejecutar.addActionListener(this);
 
-		cmedios = new CuadradosMedios();
-		pmedios = new ProductosMedios();
-		multCons = new MultiplicadorConstante();
-				
-		
 		ButtonGroup bg = new ButtonGroup();
 		
 		bg.add(cuadradosMedios);
 		bg.add(multipliConst);
 		bg.add(productosMedios);
+		bg.add(lineal);
+		bg.add(congruencialMult);
+		
 	}
 	
 	@Override
@@ -100,40 +118,29 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 	{
 		if(ejecutar == arg0.getSource())
 		{
-			int x = 
-			Integer.parseInt
-					(JOptionPane.showInputDialog("Cuantos numeros quieres generar"));
-			
-			String  c = (JOptionPane.showInputDialog("Introduce la semilla: "));
-			String  c2 = (JOptionPane.showInputDialog("Introduce la semilla 2: "));
-			
-//			cmedios.calcularCM(semilla, x);
-			
-//			pmedios.calcularCM(semilla, semilla2, x);
-			multCons.calcularCM(c, c2, x);
-			tabla.agregaReng(multCons.resultado);
+			refer.calcular(tabla.getDatos());
+			tabla.agregaReng(refer.resultado);
 		}
 	}
+	
+	public String columnas[][] =
+			{
+				{"i","Semilla","Semilla²","Digitos Centro","Valor semilla ri"},
+				{"i","Semilla","Semilla2","Semilla*Semilla2","Digitos Centro","Valor semilla ri"},
+				{"i","Constante","Semilla","Constante*Semilla","Digitos Centro","Valor semilla ri"},
+				{"i","Semilla","(a*semilla) + c","Modulo","xi","ri"},
+				{"i","Semilla","(a*semilla)","Modulo","xi","ri"}
+			};
 	
 	@Override
 	public void itemStateChanged(ItemEvent e)
 	{
-		if(cuadradosMedios.isSelected())
-		{
-			tabla.crearColumnas("i","Semilla","Semilla²","Digitos Centro","Valor semilla ri");
-			tabla.validate();
-		}
-		else if(productosMedios.isSelected())
-		{
-			tabla.crearColumnas("i","Semilla","Semilla2","Semilla*Semilla2","Digitos Centro","Valor semilla ri");
-			tabla.validate();
-		}
-	
-		else if(multipliConst.isSelected())
-		{
-			tabla.crearColumnas("i","Constante","Semilla","Constante*Semilla","Digitos Centro","Valor semilla ri");
-			tabla.validate();
-		}
+		MyRaddioButton m = (MyRaddioButton) e.getSource();
+		
+		refer = m.calc;
+		tabla.habilitar(m.buttons);
+		tabla.crearColumnas(columnas[m.getID()]);
+		tabla.validate();
 	}
 	
 	public static void main(String[] args) 

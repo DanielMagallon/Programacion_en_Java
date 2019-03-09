@@ -2,11 +2,14 @@ package Simulacion;
 
 import java.math.BigInteger;
 
-import javax.swing.JOptionPane;
-
-public class MultiplicadorConstante 
+public class MultiplicadorConstante extends Calculo
 {
-public String resultado[][];
+	@Override
+	public void calcular(String...valores) 
+	{
+		calcularCM(valores[0], valores[1], 
+				Integer.parseInt(valores[2]));
+	}
 	
 	public void calcularCM(String constant,String valor2,int cantSemillas)
 	{
@@ -33,78 +36,5 @@ public String resultado[][];
 			
 			valor2 = medio;
 		}
-	}
-	
-	private String borrar0_s(String val)
-	{
-		StringBuilder var = new StringBuilder(val);
-		
-		for(int i=0; i<var.length(); i++)
-		{
-			if(var.charAt(0) == '0')
-			{
-				var.deleteCharAt(0);
-			}
-			else break;
-			
-		}
-		
-		return var.toString();
-	}
-	
-	public String obtenerMedio(String val, int cant)
-	{
-		
-		StringBuilder var;
-		
-		
-		boolean agregar;
-		
-		
-		int cant2;
-		
-		var = new StringBuilder(val);
-		int digitosSacar;
-		
-		if(cant%2==0)
-		{
-			agregar = !((cant2 = var.length())%2==0);
-			digitosSacar = cant/2;
-			
-		}
-		else {
-			
-			agregar = ((cant2 =  var.length())%2==0);
-			
-			if(cant2%2==0)
-			{
-				digitosSacar= (cant/2)+1;
-				
-			}
-			else digitosSacar = cant/2;
-		}
-		
-		if(agregar)
-		{
-			var.insert(0, "0");
-		}
-		
-		
-		int k=var.length()-1;
-		for(int j=0; j<digitosSacar; j++,k--)
-		{
-			var.deleteCharAt(k);
-			k=var.length();
-		}
-		
-		
-		for(int j=0; j<digitosSacar; j++)
-		{
-			var.deleteCharAt(0);
-			
-		}
-		
-		
-		return var.toString();
 	}
 }

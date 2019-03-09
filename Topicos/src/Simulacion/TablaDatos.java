@@ -1,15 +1,26 @@
 package Simulacion;
 
+import java.awt.BorderLayout;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-public class TablaDatos extends JTable 
+public class TablaDatos extends JPanel 
 {
 	DefaultTableModel modelo;
-	
+	JTable table;
+	JPanel panelConf,panelUp;
+	JLabel[] lbls;
+	public JTextField txtFs[];
 	
 	public TablaDatos()
 	{
+		setLayout(new BorderLayout());
+		
 		modelo  = new DefaultTableModel() 
 		{
 			@Override
@@ -19,9 +30,68 @@ public class TablaDatos extends JTable
 			}
 		};
 		
-		setModel(modelo);
+		table = new JTable();
+		JScrollPane sc = new JScrollPane(table);
+		
+		table.setModel(modelo);
 	
-//		setAutoResizeMode(AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+		panelConf = new JPanel();
+		
+		add(panelConf,"North");
+		add(sc,"Center");
+		
+		panelUp = new JPanel();
+		{
+		
+			lbls = new JLabel[5];
+			txtFs = new JTextField[5];
+			
+			for(int i=0; i<lbls.length; i++)
+			{
+				lbls[i] = new JLabel();
+				txtFs[i] = new JTextField(10);
+				txtFs[i].setVisible(false);
+				
+				panelUp.add(lbls[i]);
+				panelUp.add(txtFs[i]);
+			}
+			
+			add(panelUp,"North");
+		}
+		
+	}
+	
+	private int x;
+	
+	public void habilitar(String...comps)
+	{
+		x = comps.length;
+		
+		for(int i=0; i<lbls.length; i++)
+		{
+			if(i<comps.length)
+			{
+				lbls[i].setText(comps[i]);
+				txtFs[i].setVisible(true);
+			}
+			else 
+			{
+				lbls[i].setText("");
+				txtFs[i].setVisible(false);
+			}
+		}
+	}
+	
+	public String[] getDatos()
+	{
+		String x[] = new String[this.x];
+		
+		for(int i=0; i<this.x; i++)
+		{
+			x[i] = txtFs[i].getText();
+		}
+		
+		return x;
 	}
 	
 	public void crearColumnas(String...cols)
