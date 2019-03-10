@@ -2,6 +2,8 @@ package Simulacion;
 
 import java.math.BigInteger;
 
+import javax.swing.JOptionPane;
+
 public class ProductosMedios extends Calculo
 {
 	@Override
@@ -16,24 +18,32 @@ public class ProductosMedios extends Calculo
 		String medio;
 		
 		resultado = new String[cantSemillas][6];
+		initRest();
 		
-		for(int i=0; i<resultado.length; i++)
+		try
 		{
-			valor = borrar0_s(valor);
-			valor2 = borrar0_s(valor2);
+			for(int i=0; i<resultado.length; i++)
+			{
+				valor = borrar0_s(valor);
+				valor2 = borrar0_s(valor2);
+				
+				
+				val = new BigInteger(valor);
+				val2 = new BigInteger(valor2);
+				
+				resultado[i][0] = (i+1)+"";
+				resultado[i][1] = valor;
+				resultado[i][2] = valor2;
+				resultado[i][3] = val.multiply(val2).toString();
+				resultado[i][4] = medio = obtenerMedio(resultado[i][3],valor.length());
+				resultado[i][5] = "."+medio;
+				valor = valor2;
+				valor2 = medio;
+			}
+		}catch(Exception e) {
 			
+			JOptionPane.showMessageDialog(null, "Las semillas intoducidas generan valore nulos");
 			
-			val = new BigInteger(valor);
-			val2 = new BigInteger(valor2);
-			
-			resultado[i][0] = (i+1)+"";
-			resultado[i][1] = valor;
-			resultado[i][2] = valor2;
-			resultado[i][3] = val.multiply(val2).toString();
-			resultado[i][4] = medio = obtenerMedio(resultado[i][3],valor.length());
-			resultado[i][5] = "."+medio;
-			valor = valor2;
-			valor2 = medio;
 		}
 	}
 }

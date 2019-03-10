@@ -3,7 +3,7 @@ package Simulacion;
 public abstract class Calculo extends AbstractCalculo
 {
 	
-	protected String obtenerMedio(String val, int cant)
+	protected String obtenerMedio(String val, int cant) throws Exception
 	{
 		StringBuilder var;
 		boolean agregar;

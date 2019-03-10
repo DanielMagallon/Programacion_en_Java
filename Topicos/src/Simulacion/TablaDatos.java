@@ -9,13 +9,14 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-public class TablaDatos extends JPanel 
+public class TablaDatos extends JPanel
 {
 	DefaultTableModel modelo;
 	JTable table;
 	JPanel panelConf,panelUp;
 	JLabel[] lbls;
 	public JTextField txtFs[];
+	public Validar valid;
 	
 	public TablaDatos()
 	{
@@ -61,6 +62,11 @@ public class TablaDatos extends JPanel
 		
 	}
 	
+	public void setRestrictions(Validar v)
+	{
+		valid = v;
+	}
+	
 	private int x;
 	
 	public void habilitar(String...comps)
@@ -82,15 +88,26 @@ public class TablaDatos extends JPanel
 		}
 	}
 	
-	public String[] getDatos()
+	public String[] getDatos(boolean inSize) throws MiExcepcion, NumberFormatException
 	{
 		String x[] = new String[this.x];
+		int y[] = new int[this.x];
 		
 		for(int i=0; i<this.x; i++)
 		{
 			x[i] = txtFs[i].getText();
+			
+			if(inSize)
+			y[i] = txtFs[i].getText().length();
+			
+			else
+				y[i] = Integer.parseInt(txtFs[i].getText());
 		}
 		
+		y[this.x-1] = Integer.parseInt(txtFs[this.x-1].getText());
+		
+		valid.validar(y);
+			
 		return x;
 	}
 	

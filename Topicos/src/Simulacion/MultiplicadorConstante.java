@@ -2,6 +2,8 @@ package Simulacion;
 
 import java.math.BigInteger;
 
+import javax.swing.JOptionPane;
+
 public class MultiplicadorConstante extends Calculo
 {
 	@Override
@@ -17,9 +19,12 @@ public class MultiplicadorConstante extends Calculo
 		String medio;
 		
 		resultado = new String[cantSemillas][6];
+		initRest();
 		constant = borrar0_s(constant);
 		val = new BigInteger(constant);
 		
+		try
+		{
 		for(int i=0; i<resultado.length; i++)
 		{
 			
@@ -35,6 +40,9 @@ public class MultiplicadorConstante extends Calculo
 			resultado[i][5] = "."+medio;
 			
 			valor2 = medio;
+		}
+		}catch(Exception e) {
+			JOptionPane.showMessageDialog(null, "Las semillas introducidas generan rapidamente valores nulos");
 		}
 	}
 }

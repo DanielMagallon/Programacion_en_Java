@@ -6,8 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -28,7 +26,8 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 	LinealCongruencial lc;
 	JPanel panelTabla;
 	AbstractCalculo refer;
-	
+	TablasEstadisticas tablaEst;
+
 	public Ejecutable() 
 	{
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -40,7 +39,9 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 		panelTabla = new JPanel();
 		{
 			panelTabla.setLayout(new GridLayout(1,1));
-			panelTabla.add(tabla = new TablaDatos());
+			//panelTabla.add(tabla);
+			panelTabla.add(tablaEst.scChi2);
+
 			
 			add(panelTabla,"Center");
 		}
@@ -69,6 +70,7 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 		tabla.habilitar(cuadradosMedios.buttons);
 		tabla.crearColumnas(columnas[0]);
 		refer = cmedios;
+		tabla.setRestrictions(restricciones[0]);
 	}
 	
 
@@ -79,23 +81,29 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 		multCons = new MultiplicadorConstante();
 		lc =  new LinealCongruencial();		
 		
-		cuadradosMedios = new MyRaddioButton("Cuadrados medios",0,cmedios,"Semilla","Nro. semillas");
+		cuadradosMedios = new MyRaddioButton("Cuadrados medios",0,0,cmedios,"Semilla","Nro. semillas");
+		//Que la semilla sea mayor a 3 digitos, numero de semillas > 0
+		
 		cuadradosMedios.setSelected(true);
 		cuadradosMedios.addItemListener(this);
 		
-		productosMedios = new MyRaddioButton("Productos Medios",1,pmedios,"Semilla","Semilla2",
+		productosMedios = new MyRaddioButton("Productos Medios",1,1,pmedios,"Semilla","Semilla2",
 				"Nro. semillas");
+		//Que ambas semillas sean del mismo tamaño, y mayores a 3 digito,numerode semillas>0
+		
 		productosMedios.addItemListener(this);
 		
-		multipliConst = new MyRaddioButton("Multiplicador constante",2,multCons,"Constante","Semilla"
+		multipliConst = new MyRaddioButton("Multiplicador constante",2,1,multCons,"Constante","Semilla"
 				,"Nro. semillas");
+
 		multipliConst.addItemListener(this);
 		
 		
-		lineal = new MyRaddioButton("Lineal",3,lc,"a","Semilla","c","Modulo","Nro. semillas");
+		lineal = new MyRaddioButton("Lineal",3,2,lc,"a","Semilla","c","Modulo","Nro. semillas");
+		//todo > 0
 		lineal.addItemListener(this);
 		
-		congruencialMult = new MyRaddioButton("Congruencial multiplicativo",4,lc,
+		congruencialMult = new MyRaddioButton("Congruencial multiplicativo",4,2,lc,
 							"a","Semilla","Modulo","Nro. semillas");
 		congruencialMult.addItemListener(this);
 		
@@ -103,6 +111,9 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 		ejecutar = new JButton("Ejecutar");
 		ejecutar.addActionListener(this);
 
+		tablaEst = new TablasEstadisticas();
+		tabla = new TablaDatos();
+		
 		ButtonGroup bg = new ButtonGroup();
 		
 		bg.add(cuadradosMedios);
@@ -113,13 +124,70 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 		
 	}
 	
+	public Validar restricciones[] =
+		{
+			(a)->
+			{
+				
+				if(a[0]>3)
+				{
+					if(a[1]>0)
+						return true;
+					
+					throw new MiExcepcion("Debe generar al menos una iteracion");
+				}
+			
+				throw new MiExcepcion("Debe ingresar una semilla de 4 digitos o mas");
+			},	
+			
+			(a)->
+			{
+				if(a[0]>3)
+				{
+					if(a[1]==a[0])
+					{
+						if(a[2]>0)
+							return true;
+						
+						throw new MiExcepcion("Debe generar al menos una iteracion");
+					}
+					else throw new MiExcepcion("Ambas semillas deben tener el mismo tamaño");
+				}
+				else throw new MiExcepcion("Debe ingresar una semilla de 4 digitos o mas");
+			},
+			
+			(a)->
+			{
+				for(int x : a)
+				{
+					if(x==0)
+						throw new MiExcepcion("Los valores deben ser mayores a 0");
+				}
+				
+				return true;
+			}
+			
+		};
+	
 	@Override
 	public void actionPerformed(ActionEvent arg0) 
 	{
 		if(ejecutar == arg0.getSource())
 		{
-			refer.calcular(tabla.getDatos());
-			tabla.agregaReng(refer.resultado);
+			try
+			{
+				refer.calcular(tabla.getDatos(m.getIDRestriction()<=1));
+				tabla.agregaReng(refer.resultado);
+			}
+			catch (NumberFormatException e) 
+			{
+				JOptionPane.showMessageDialog(this, "Debe ingresar valores enteros", 
+						"Advertencia", JOptionPane.WARNING_MESSAGE);
+			}
+			catch(MiExcepcion e) {
+				JOptionPane.showMessageDialog(this, e.getMessage(), 
+						"Error", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	}
 	
@@ -132,12 +200,17 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 				{"i","Semilla","(a*semilla)","Modulo","xi","ri"}
 			};
 	
+	
+	MyRaddioButton m;
+	
 	@Override
 	public void itemStateChanged(ItemEvent e)
 	{
-		MyRaddioButton m = (MyRaddioButton) e.getSource();
+		
+		m = (MyRaddioButton) e.getSource();
 		
 		refer = m.calc;
+		tabla.setRestrictions(restricciones[m.getIDRestriction()]);
 		tabla.habilitar(m.buttons);
 		tabla.crearColumnas(columnas[m.getID()]);
 		tabla.validate();
