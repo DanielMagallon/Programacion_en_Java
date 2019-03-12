@@ -51,15 +51,15 @@ public class PaintRnd extends JFrame
 				{
 					for(j=0; j<=getWidth(); j+=incJ)
 					{
-//						 Color color = new Color(r.nextInt(256),r.nextInt(256),r.nextInt(256));
-//						 g.setColor(color);
+						 Color color = new Color(r.nextInt(256),r.nextInt(256),r.nextInt(256));
+						 g.setColor(color);
 						
-						 x = r.nextInt(2);
-						
-							if(x==0)
-								g.setColor(Color.black);
-							
-							else g.setColor(Color.white);
+//						 x = r.nextInt(2);
+//						
+//							if(x==0)
+//								g.setColor(Color.black);
+//							
+//							else g.setColor(Color.white);
 
 							g.fillRect(j, i, i+incJ, j+incI);
 //							g.drawLine(j, i, i*x, j*x);

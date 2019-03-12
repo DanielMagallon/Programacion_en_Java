@@ -1,5 +1,6 @@
 package Simulacion;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import javax.swing.JOptionPane;
@@ -17,11 +18,14 @@ public class MultiplicadorConstante extends Calculo
 	{
 		BigInteger val,val2;
 		String medio;
+
+		MathData.valoresXi = new BigDecimal[cantSemillas];
 		
 		resultado = new String[cantSemillas][6];
 		initRest();
 		constant = borrar0_s(constant);
 		val = new BigInteger(constant);
+		cant = constant.length();
 		
 		try
 		{
@@ -36,8 +40,9 @@ public class MultiplicadorConstante extends Calculo
 			resultado[i][1] = constant;
 			resultado[i][2] = valor2;
 			resultado[i][3] = val.multiply(val2).toString();
-			resultado[i][4] = medio = obtenerMedio(resultado[i][3],constant.length());
+			resultado[i][4] = medio = obtenerMedio(resultado[i][3]);
 			resultado[i][5] = "."+medio;
+			MathData.asingarXis(resultado[i][5], i);
 			
 			valor2 = medio;
 		}

@@ -39,6 +39,8 @@ public class LinealCongruencial extends  AbstractCalculo
 		resultado = new String[num_sem][6];
 		initRest();
 		
+		MathData.valoresXi = new BigDecimal[num_sem];
+		
 		BigDecimal decA = new BigDecimal(a);
 		BigDecimal decX = new BigDecimal(x);
 		BigDecimal decC = new BigDecimal(c);
@@ -59,29 +61,27 @@ public class LinealCongruencial extends  AbstractCalculo
 				
 				resultado[i][2] = decMult.toString();
 	
-				decDiv = decMult.divide(decMod,2, RoundingMode.HALF_DOWN);
-				
+				decDiv = decMult.divide(decMod,4, RoundingMode.HALF_DOWN);
 				
 				cad = (decDiv.toString()).substring(0,decDiv.toString().indexOf('.'));
-				
 				decRes = decDiv.subtract(new BigDecimal(cad));
 				
 				resultado[i][3] = decRes.toString();
 				
 				decXind = decRes.multiply(decMod);
+				decXind = decXind.divide(BigDecimal.ONE,0,RoundingMode.HALF_UP);
 						
 				resultado[i][4] = decXind.toString();
 				
 				decRi = decXind.floatValue()/(decMod.floatValue()-1);
 				
 				resultado[i][5] = decRi+"";
-				
+				MathData.asingarXis(resultado[i][5], i);
 				decX = decXind;
 			}
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Los valores dados generan valores nulos",
 					"Atencion",JOptionPane.INFORMATION_MESSAGE);
 		}

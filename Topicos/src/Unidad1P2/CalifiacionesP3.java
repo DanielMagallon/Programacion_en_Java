@@ -160,6 +160,7 @@ public class CalifiacionesP3 extends JFrame
 				cen.add(lblAlu);
 				cen.add(cali);
 				add(cen,"Center");
+				
 			}
 		}
 		
