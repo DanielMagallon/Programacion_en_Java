@@ -1,6 +1,8 @@
 package Simulacion;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -10,15 +12,14 @@ import java.awt.event.ItemListener;
 import java.io.File;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableModel;
 
 public class Ejecutable extends JFrame implements ItemListener, ActionListener
 {
@@ -37,7 +38,6 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 	TablasEstadisticas tablaEst;
 	PruebaChi2 pruebaChi2;
 
-	JToolBar barraTablas;
 	JButton btnValCrit,btnAreaCurva,btnChi2;
 	VentanaTablas ventana1,ventana2,ventana3;
 	
@@ -45,7 +45,7 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 	{
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setExtendedState(MAXIMIZED_BOTH);
-		setLayout(new BorderLayout());
+		setLayout(new BorderLayout(10,10));
 		
 		init();
 		
@@ -78,12 +78,16 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 		}
 		
 		
+		JPanel panelTablas = new JPanel();
 		{
-			barraTablas.add(btnAreaCurva);
-			barraTablas.add(btnValCrit);
-			barraTablas.add(btnChi2);
-			add(barraTablas,"West");
+			panelTablas.setLayout(new GridLayout(6,1,25,25));
+			panelTablas.add(btnAreaCurva);
+			panelTablas.add(btnValCrit);
+			panelTablas.add(btnChi2);
+			add(panelTablas,"West");
 		}
+		
+//		JScrollPane sc = new JScrollPane(pruebaChi2);
 		
 		
 		tabla.habilitar(cuadradosMedios.buttons);
@@ -92,8 +96,8 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 		m = cuadradosMedios;
 		tabla.setRestrictions(restricciones[0]);
 	}
-	
 
+	
 	private void init()
 	{
 
@@ -131,6 +135,7 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 		
 		
 		ejecutar = new JButton("Ejecutar");
+		ejecutar.setBackground(Color.black);
 		ejecutar.addActionListener(this);
 
 		tablaEst = (TablasEstadisticas) Serializa.writeObject
@@ -146,19 +151,21 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 		ventana1 = new VentanaTablas(tablaEst.scABC,1100,650);
 		ventana2 = new VentanaTablas(tablaEst.scChi2,1100,650);
 		ventana3 = new VentanaTablas(tablaEst.scVC,800,550);
-		
-		barraTablas = new JToolBar(JToolBar.VERTICAL);
 
-		btnAreaCurva = new JButton();
-		btnAreaCurva.setToolTipText("Area bajo la curva");
+		
+		btnAreaCurva = new JButton("Area Bajo Curva");
+		btnAreaCurva.setBackground(Color.white);
+//		btnAreaCurva.setToolTipText("Area bajo la curva");
 		btnAreaCurva.addActionListener(this);
 		
-		btnChi2 = new JButton();
-		btnChi2.setToolTipText("Tabla de Chi2");
+		btnChi2 = new JButton("Tabla de Chi2");
+		btnChi2.setBackground(Color.white);
+//		btnChi2.setToolTipText("Tabla de Chi2");
 		btnChi2.addActionListener(this);
 		
-		btnValCrit = new JButton();
-		btnValCrit.setToolTipText("Tabla de valores criticos");
+		btnValCrit = new JButton("Tabla de valores criticos");
+		btnValCrit.setBackground(Color.white);
+//		btnValCrit.setToolTipText("Tabla de valores criticos");
 		btnValCrit.addActionListener(this);
 		
 		pruebaChi2 = new  PruebaChi2();
@@ -269,6 +276,8 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 	
 	
 	MyRaddioButton m;
+
+	
 	
 	@Override
 	public void itemStateChanged(ItemEvent e)
@@ -286,10 +295,26 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 	
 	public static void main(String[] args) 
 	{
-		
 		SwingUtilities.invokeLater(
 				
-					()-> new Ejecutable().setVisible(true)
+					()-> 
+					{
+						
+//						try
+//						{
+//							UIManager.setLookAndFeel(
+////							        UIManager.getSystemLookAndFeelClassName()
+////									"com.sun.java.swing.plaf.motif.MotifLookAndFeel"
+////									"com.sun.java.swing.plaf.gtk.GTKLookAndFeel"
+//							        );
+//						} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+//								| UnsupportedLookAndFeelException e)
+//						{
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+						new Ejecutable().setVisible(true);
+					}
 					
 				
 				);
