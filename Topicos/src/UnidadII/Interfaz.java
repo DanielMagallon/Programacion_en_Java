@@ -117,6 +117,7 @@ public class Interfaz extends JFrame implements ActionListener
 		{
 			cadenaOper.asignar(txt.getText());
 			edPane.setText(cadenaOper.toString());
+			
 		}
 
 		else if (e.getSource() == btns[2])
@@ -178,7 +179,7 @@ public class Interfaz extends JFrame implements ActionListener
 			String cad = cadenaOper.obtenerCadena() + "<br>" + formato(cadenaOper.inversa(), "yellow");
 
 			edPane.setText(cad);
-
+			
 		}
 
 		lblTam.setText("Tamaño: " + cadenaOper.longitud());
