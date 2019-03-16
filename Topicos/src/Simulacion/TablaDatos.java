@@ -24,11 +24,11 @@ public class TablaDatos extends JPanel
 		
 		modelo  = new DefaultTableModel() 
 		{
-			@Override
-			public boolean isCellEditable(int row, int column) 
-			{
-				return row == 0 && column == 1;
-			}
+//			@Override
+//			public boolean isCellEditable(int row, int column) 
+//			{
+//				return row == 0 && column == 1;
+//			}
 		};
 		
 		table = new JTable();

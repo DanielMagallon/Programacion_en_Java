@@ -2,6 +2,8 @@ package Simulacion;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -13,21 +15,20 @@ public class TablasEstadisticas implements Serializable
 	private static final long serialVersionUID = -6402570270839738665L;
 	
 	public JScrollPane scVC, scABC, scChi2;
-	private JTable tablaAreaBajoCurva, tablaChiCuadrado, tablaValoresCriticos;
+	public JTable tablaAreaBajoCurva, tablaChiCuadrado, tablaValoresCriticos;
 
 	public HashMap<Integer, BigDecimal[]> valoresCriticos;
 	public LinkedHashMap<Double, BigDecimal[]> valorBajoCurva;
 	public LinkedHashMap<Integer, BigDecimal[]> valorChi2;
 
 	public TablasEstadisticas() {
-		System.out.println("nete");
 		init();
 
 		tablaValoresCriticos = new JTable(
 
 				getTable(valoresCriticos, 4),
 
-				new Object[] { "v grados de libertad", "Dα = 0.1", "Dα = 0.5", "Dα = 0.01" });
+				new Object[] { "v grados de libertad", "Dα = 0.1", "Dα = 0.05", "Dα = 0.01" });
 
 		tablaAreaBajoCurva = new JTable(getTable(valorBajoCurva, 11),
 
@@ -327,6 +328,39 @@ public class TablasEstadisticas implements Serializable
 		
 		valorChi2.put(100,getBDec("67.3","70.1","74.2","77.9","82.4","90.1",
 				"99.3","109","118","124","130","136","140","149"));
+	}
+	
+	public BigDecimal getValorCritico(Integer key, int pos)
+	{
+		BigDecimal d=null;
+		
+		try
+		{
+			d = valoresCriticos.get(key)[pos];
+		}
+		catch(NullPointerException e)
+		{
+
+			switch(pos)
+			{
+				case 0:
+					d = new BigDecimal(1.22).divide(new BigDecimal(key).sqrt
+							(new MathContext(3,RoundingMode.HALF_UP)),3,RoundingMode.HALF_UP);
+					break;
+					
+				case 1:
+					d = new BigDecimal(1.36).divide(new BigDecimal(key).sqrt
+							(new MathContext(3,RoundingMode.HALF_UP)),3,RoundingMode.HALF_UP);
+					break;
+					
+				case 2:
+					d = new BigDecimal(1.63).divide(new BigDecimal(key).sqrt
+							(new MathContext(3,RoundingMode.HALF_UP)),3,RoundingMode.HALF_UP);
+			}
+			
+		}
+		
+		return d;
 	}
 	
 	private BigDecimal[] getBDec(String... vs) {

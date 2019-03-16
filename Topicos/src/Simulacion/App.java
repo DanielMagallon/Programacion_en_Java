@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
+import java.math.BigDecimal;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -21,7 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
-public class Ejecutable extends JFrame implements ItemListener, ActionListener
+public class App extends JFrame implements ItemListener, ActionListener
 {
 
 	private static final long serialVersionUID = 6340630260887584674L;
@@ -37,11 +38,14 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 	AbstractCalculo refer;
 	TablasEstadisticas tablaEst;
 	PruebaChi2 pruebaChi2;
+	PruebaKol_Smirov pruebaKSov;
 
-	JButton btnValCrit,btnAreaCurva,btnChi2;
-	VentanaTablas ventana1,ventana2,ventana3;
+	JButton btnValCrit,btnAreaCurva,btnChi2,btbPruebaChi2,btnPruebaKS;
+	VentanaTablas ventana1,ventana2,ventana3,venataPC2,ventanaPKS;
 	
-	public Ejecutable() 
+	Poker poker;
+	
+	public App() 
 	{
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setExtendedState(MAXIMIZED_BOTH);
@@ -84,6 +88,8 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 			panelTablas.add(btnAreaCurva);
 			panelTablas.add(btnValCrit);
 			panelTablas.add(btnChi2);
+			panelTablas.add(btbPruebaChi2);
+			panelTablas.add(btnPruebaKS);
 			add(panelTablas,"West");
 		}
 		
@@ -95,6 +101,8 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 		refer = cmedios;
 		m = cuadradosMedios;
 		tabla.setRestrictions(restricciones[0]);
+		
+		
 	}
 
 	
@@ -133,6 +141,8 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 							"a","Semilla","Modulo","Nro. semillas");
 		congruencialMult.addItemListener(this);
 		
+		poker = new Poker();
+				
 		
 		ejecutar = new JButton("Ejecutar");
 		ejecutar.setBackground(Color.black);
@@ -140,11 +150,9 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 
 		tablaEst = (TablasEstadisticas) Serializa.writeObject
 				(new File(System.getProperty("user.dir")+"/src/Simulacion/Files/tabla.est"));
-		
-		
-	/*	tablaEst = new TablasEstadisticas();
-		Serializa.saveObject(tablaEst, new File(System.getProperty
-				("user.dir")+"/src/Simulacion/Files/tabla.est"));*/
+//		tablaEst = new TablasEstadisticas();
+//		Serializa.saveObject(tablaEst, new File(System.getProperty
+//				("user.dir")+"/src/Simulacion/Files/tabla.est"));
 		
 		tabla = new TablaDatos();
 		
@@ -168,7 +176,17 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 //		btnValCrit.setToolTipText("Tabla de valores criticos");
 		btnValCrit.addActionListener(this);
 		
+		btbPruebaChi2 = new JButton("Pruebba de Chi2");
+		btbPruebaChi2.addActionListener(this);
+		
+		btnPruebaKS = new JButton("Prueba de  kolmogorov-smirnov");
+		btnPruebaKS.addActionListener(this);
+		
 		pruebaChi2 = new  PruebaChi2();
+		venataPC2 = new VentanaTablas(new JScrollPane(pruebaChi2), 800, 660);
+		
+		pruebaKSov = new PruebaKol_Smirov();
+		ventanaPKS = new VentanaTablas(new JScrollPane(pruebaKSov), 800, 660);
 		
 		ButtonGroup bg = new ButtonGroup();
 		
@@ -234,7 +252,9 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 			{
 				refer.calcular(tabla.getDatos(m.getIDRestriction()<=1));
 				tabla.agregaReng(refer.resultado);
-				pruebaChi2.generar();
+//				pruebaChi2.generar();
+//				pruebaKSov.generar();
+				poker.generar();
 				
 			}
 			catch (NumberFormatException e) 
@@ -262,6 +282,17 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 		else if(arg0.getSource() == btnAreaCurva)
 		{
 			ventana1.setVisible(true);
+		}
+		
+		else if(arg0.getSource() == btbPruebaChi2)
+		{
+			venataPC2.setVisible(true);
+		}
+		
+		else if(arg0.getSource() == btnPruebaKS)
+		{
+//			ventanaPKS.setVisible(true);
+			poker.setVisible(true);
 		}
 	}
 	
@@ -291,33 +322,6 @@ public class Ejecutable extends JFrame implements ItemListener, ActionListener
 		tabla.crearColumnas(columnas[m.getID()]);
 		tabla.validate();
 		
-	}
-	
-	public static void main(String[] args) 
-	{
-		SwingUtilities.invokeLater(
-				
-					()-> 
-					{
-						
-//						try
-//						{
-//							UIManager.setLookAndFeel(
-////							        UIManager.getSystemLookAndFeelClassName()
-////									"com.sun.java.swing.plaf.motif.MotifLookAndFeel"
-////									"com.sun.java.swing.plaf.gtk.GTKLookAndFeel"
-//							        );
-//						} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-//								| UnsupportedLookAndFeelException e)
-//						{
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
-						new Ejecutable().setVisible(true);
-					}
-					
-				
-				);
 	}
 	
 	class VentanaTablas extends JDialog

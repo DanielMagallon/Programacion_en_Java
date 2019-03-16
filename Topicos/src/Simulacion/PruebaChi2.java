@@ -24,9 +24,8 @@ public class PruebaChi2 extends JTable
 	{
 		modelo.addColumn("Intervalos");
 		modelo.addColumn("Oi");
-		modelo.addColumn("Ei");
+		modelo.addColumn("Ei"); 
 		modelo.addColumn("X²o");
-		
 		setModel(modelo);
 	}
 	

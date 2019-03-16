@@ -42,7 +42,6 @@ public abstract class Calculo extends AbstractCalculo
 				}
 				else
 				{
-					System.out.println("Val: "+val);
 					digitosSacar = (int)(0.5 * val.length()) - (int)(0.5*cant);
 					
 					if(var.length()%2==0)//Ag,saca
