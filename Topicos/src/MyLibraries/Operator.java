@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Operator {
 	private StringBuilder cadena;
 
-	public Operator(String cad) {
+	public Operator(String cad) { 
 		cadena = new StringBuilder(cad);
 	}
 
