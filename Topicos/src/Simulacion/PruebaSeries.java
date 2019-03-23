@@ -4,6 +4,6 @@ public class PruebaSeries
 {
 	public void generar()
 	{
-		
+		 
 	}
 }
