@@ -40,7 +40,7 @@ public class App extends JFrame implements ItemListener, ActionListener
 	PruebaChi2 pruebaChi2;
 	PruebaKol_Smirov pruebaKSov;
 
-	JButton btnValCrit,btnAreaCurva,btnChi2,btbPruebaChi2,btnPruebaKS;
+	JButton btnValCrit,btnAreaCurva,btnChi2,btbPruebaChi2,btnPruebaKS,btnPruPoker;
 	VentanaTablas ventana1,ventana2,ventana3,venataPC2,ventanaPKS;
 	
 	Poker poker;
@@ -182,6 +182,9 @@ public class App extends JFrame implements ItemListener, ActionListener
 		btnPruebaKS = new JButton("Prueba de  kolmogorov-smirnov");
 		btnPruebaKS.addActionListener(this);
 		
+		btnPruPoker = new JButton("Prueba Poker");
+		btnPruPoker.addActionListener(this);
+		
 		pruebaChi2 = new  PruebaChi2();
 		venataPC2 = new VentanaTablas(new JScrollPane(pruebaChi2), 800, 660);
 		
@@ -254,7 +257,7 @@ public class App extends JFrame implements ItemListener, ActionListener
 				tabla.agregaReng(refer.resultado);
 //				pruebaChi2.generar();
 //				pruebaKSov.generar();
-				poker.generar();
+//				poker.generar();
 				
 			}
 			catch (NumberFormatException e) 
@@ -291,9 +294,14 @@ public class App extends JFrame implements ItemListener, ActionListener
 		
 		else if(arg0.getSource() == btnPruebaKS)
 		{
-//			ventanaPKS.setVisible(true);
+			ventanaPKS.setVisible(true);
+		}
+
+		else if(arg0.getSource() == btnPruPoker)
+		{
 			poker.setVisible(true);
 		}
+		
 	}
 	
 	public String columnas[][] =

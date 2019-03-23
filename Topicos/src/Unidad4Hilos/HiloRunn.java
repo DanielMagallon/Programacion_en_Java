@@ -1,27 +1,28 @@
 package Unidad4Hilos;
 
-class Hilos extends Thread
+class HiloR implements Runnable
 {
-	public Hilos(String name, int prior)
+	Thread temp;
+	
+	public HiloR(String name)
 	{
-		super(name);
-		setPriority(prior);
-		start();
+		temp = new Thread(this,name);
+		temp.start();
 	}
 	
 	@Override
-	public  void run()
+	public void run()
 	{
 		for(int i=1; i<=10; i++)
 		{
-			System.out.println(getName()+": "+i);
+			System.out.println(temp.getName()+": "+i);
 			
 			//Descansar Proceso
 			
 			try
 			{
-				//Con un milisegundo basta, hay que poner a descansar para que no haga todo de putazo
-				sleep(100);
+				//Con un milisegundo basta
+				Thread.sleep(100);
 				
 			} catch (InterruptedException e)
 			{
@@ -32,17 +33,15 @@ class Hilos extends Thread
 	}
 }
 
-public class Hilo 
+public class HiloRunn
 {
 	public static void main(String[] args)
-	{		
-		
+	{
 		Thread hilo = Thread.currentThread();
 
-		synchronized(new Hilos("Hilo2",5))
-		{
-		}
-		Hilos h3 = new Hilos("Hilo3",5);
+		new HiloR("HiloRun2");
+		
+		new HiloR("HiloRun3");
 		
 		System.out.println(hilo);
 		
@@ -78,6 +77,5 @@ public class Hilo
 				e.printStackTrace();
 			}
 		}
-		
 	}
 }

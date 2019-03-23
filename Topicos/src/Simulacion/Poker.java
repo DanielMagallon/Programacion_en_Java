@@ -3,6 +3,7 @@ package Simulacion;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.Set;
@@ -30,8 +31,11 @@ public class Poker extends JDialog
 	public int[] frecuenciasCategoria4;
 	public int[] frecuenciasCategoria3;
 	
+	private BigDecimal n; 
+	
 	public Poker()
 	{
+		setTitle("Prueba Poker");
 		setLayout(new BorderLayout());
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(1000, 700);
@@ -141,6 +145,7 @@ public class Poker extends JDialog
 		digitos5d = new LinkedHashMap[valoresXi.length];
 		digitos4d = new LinkedHashMap[valoresXi.length];
 		digitos3d = new LinkedHashMap[valoresXi.length];
+		n = new BigDecimal(valoresXi.length);
 		
 		for(i=0; i<valoresXi.length; i++)
 		{
@@ -181,20 +186,46 @@ public class Poker extends JDialog
 	
 	private void valoresTablas()
 	{
+		BigDecimal Ei,x2,suma5 = BigDecimal.ZERO,suma4=BigDecimal.ZERO,
+				suma3=BigDecimal.ZERO;
+		
 		for(i=0; i<frecuenciasCategoria5.length; i++)
 		{
 			if(i<=2)
 			{
+				Ei = getProbabilty(3, i).multiply(n);
+				x2 = Ei.subtract(new BigDecimal(frecuenciasCategoria3[i])).pow(2).divide
+						(Ei,5,RoundingMode.HALF_EVEN);
+				suma3 = suma3.add(x2);
 				models[2].setValueAt(frecuenciasCategoria3[i], i, 1);
+				models[2].setValueAt(Ei, i, 2);
+				models[2].setValueAt(x2, i, 3);
 			}
 			
 			if(i<=4)
 			{
+				Ei = getProbabilty(4, i).multiply(n);
+				x2 = Ei.subtract(new BigDecimal(frecuenciasCategoria4[i])).pow(2).divide
+						(Ei,5,RoundingMode.HALF_EVEN);
+				suma4=suma4.add(x2);
 				models[1].setValueAt(frecuenciasCategoria4[i], i, 1);
+				models[1].setValueAt(Ei, i, 2);
+				models[1].setValueAt(x2, i, 3);
 			}
 			
+			Ei = getProbabilty(5, i).multiply(n);
+			x2 = Ei.subtract(new BigDecimal(frecuenciasCategoria5[i])).pow(2).divide
+					(Ei,5,RoundingMode.HALF_EVEN);
+			suma5=suma5.add(x2);
 			models[0].setValueAt(frecuenciasCategoria5[i], i, 1);
+			models[0].setValueAt(Ei, i, 2);
+			models[0].setValueAt(x2, i, 3);
+		
 		}
+		
+		models[0].setValueAt(suma5, 7, 3);
+		models[1].setValueAt(suma4, 5, 3);
+		models[2].setValueAt(suma3, 3, 3);
 	}
 	
 	private void count()
@@ -253,9 +284,9 @@ public class Poker extends JDialog
 		
 		String reng[][] =
 			{
-					{"TD","1Par","2Pares","Tercia","Tercia Par","Poker","Quintilla"},
-					{"TD","1Par","2Pares","Tercia","Poker"},
-					{"TD","1Par","Tercia"}
+					{"TD","1Par","2Pares","Tercia","Tercia Par","Poker","Quintilla",""},
+					{"TD","1Par","2Pares","Tercia","Poker",""},
+					{"TD","1Par","Tercia",""},
 			};
 		
 		for(i=0; i<3; i++)
@@ -271,6 +302,11 @@ public class Poker extends JDialog
 			for(j=0; j<reng[i].length; j++)
 				models[i].addRow(new Object[] {reng[i][j]});
 		}
+		
+		models[0].setValueAt("Σ:", 7, 2);
+		models[1].setValueAt("Σ:", 5, 2);
+		models[2].setValueAt("Σ:", 3, 2);		
+		
 		
 	}
 	

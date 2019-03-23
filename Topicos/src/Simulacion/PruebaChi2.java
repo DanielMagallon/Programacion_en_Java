@@ -44,7 +44,7 @@ public class PruebaChi2 extends JTable
 		
 		BigDecimal rango = new BigDecimal(BigInteger.ONE).divide(m,5,RoundingMode.HALF_UP);
 		BigDecimal v = rango, Ei;
-		Ei = n.divide(m);
+		Ei = n.divide(m,5,RoundingMode.HALF_EVEN);
 		
 		for(i=0;i<tablaResultados.length; i++)
 		{

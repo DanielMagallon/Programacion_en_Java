@@ -534,12 +534,12 @@ public class Gui extends javax.swing.JFrame {
 
     private void repintarArbol() {
         this.jDesktopPane1.removeAll();
-        Rectangle tamaño = this.jInternalFrame2.getBounds();
+        Rectangle tamanio = this.jInternalFrame2.getBounds();
         this.jInternalFrame2 = null;
         this.jInternalFrame2 = new JInternalFrame("RepresentaciÃ³n grÃ¡fica", true);
         this.jDesktopPane1.add(this.jInternalFrame2, JLayeredPane.DEFAULT_LAYER);
         this.jInternalFrame2.setVisible(true);
-        this.jInternalFrame2.setBounds(tamaño);
+        this.jInternalFrame2.setBounds(tamanio);
         this.jInternalFrame2.setEnabled(false);
         this.jInternalFrame2.add(this.simulador.getDibujo(), BorderLayout.CENTER);
     }
