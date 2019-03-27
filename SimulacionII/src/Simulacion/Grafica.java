@@ -22,7 +22,7 @@ public class Grafica extends JPanel
 	private static final long serialVersionUID = 8456043879017609254L;
 
 	private int x=70,y=100,lado=1000,incYH=40,incYV=10,interseY=lado+y+incYV,iy,ix;
-	private int ejeX=-1,ejeY,divX,divY,pointDivX,pointDivY,i,p;
+	private int ejeX=-1,ejeY,divX,divY,pointDivX,pointDivY,i,p,ind=-1;
 	public int points[][];
 	public Color colores[];
 	private int[][] divisores;
@@ -159,7 +159,6 @@ public class Grafica extends JPanel
 		private static final long serialVersionUID = -7218262596362843238L;
 		DefaultListModel<String> modelo;
 		JButton ok;
-		int ind;
 		
 		public DivisorEspacio()
 		{
@@ -178,9 +177,12 @@ public class Grafica extends JPanel
 			ok = new JButton("Aceptar");
 			ok.addActionListener((a)->
 			{
-				
-				aplicarDiv();
-				this.dispose();
+				if(ind!=-1)
+				{
+					aplicarDiv();
+					this.dispose();
+					ind=-1;
+				}
 			});
 			p.add(ok);
 			
@@ -194,12 +196,12 @@ public class Grafica extends JPanel
 		{
 			modelo.addElement(op);
 		}
-
+		
 	}
 	
 	class Adaptadora extends MouseAdapter
 	{
-		int ind,dec;
+		int dec;
 		
 		@Override
 		public void mouseClicked(MouseEvent e)
