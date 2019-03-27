@@ -5,6 +5,10 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.Serializable;
@@ -23,20 +27,27 @@ public class AreaDibujo extends JComponent implements Serializable
 
 	public String cad="";
 	
+	private int TYPO_GRAFICA; 
+	
 	private transient BufferedImage bi;
-	private transient Graphics2D big;
+	private transient Graphics2D g2d;
 	
 	private transient Image img;
 
+	private int xFig,yFig;
+	
 	public AreaDibujo()
 	{
 		fondo();
-		gr.setDatos(new int[] { 50,20,100,80,250});
+//		addMouseMotionListener(new Arrastre());
+		TYPO_GRAFICA = 1;
+		xFig = yFig = 100;
+		gr.setDatos(new int[] {50,50});
 	}
 	
 	public void fondo()
 	{
-		img =  Appi.getImageIcon("/ImagesFondo/","img2.jpg").getImage();
+		img =  Appi.getImageIcon("ImagesFondo/","Img.jpg").getImage();
 	}
 
 	public void crearPNG()
@@ -64,17 +75,30 @@ public class AreaDibujo extends JComponent implements Serializable
 
 	}
 	
-	public void rotar()
+	public void rotar(int ang)
 	{
-		gr.setRotacion(gr.getAnguloRotacion()+5);
+		gr.setRotacion(gr.getAnguloRotacion()+ang);
 		repaint();
 	}
 	
-	int tam=300;
-	public void cambiarTamaño()
+	public void disminuir()
 	{
-		gr.setRadio(tam);
-		tam+=30;
+		if(gr.radioValido())
+		{
+			gr.setRadio(gr.getRadio()-30);
+			repaint();
+		}
+	}
+	
+	public void setPositionTitle(int p)
+	{
+		gr.setTitleOrientation(p);
+		repaint();
+	}
+	
+	public void aumentar()
+	{
+		gr.setRadio(gr.getRadio()+30);
 		repaint();
 	}
 
@@ -83,13 +107,31 @@ public class AreaDibujo extends JComponent implements Serializable
 		if(bi==null)
 		{
 			bi = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
-			big = bi.createGraphics();
+			g2d = bi.createGraphics();
 			
 		}
+
+		g2d.drawImage(img, 0, 0, getWidth(), getHeight(), this);
+		gr.setTitle(g2d, cad,Fuentes.colorfuente,Fuentes.fuente);
 		
-		big.drawImage(img, 0, 0, getWidth(), getHeight(), this);
-		gr.setTitle(big, cad,Grafica.NORTE,Fuentes.colorfuente,Fuentes.fuente);
-		gr.dibujarBarraPastel(big, 50, 100);
+		if(TYPO_GRAFICA == 1)
+		{
+			gr.dibujarBarraPastel(g2d, xFig, yFig);
+		}
+		else if(TYPO_GRAFICA == 2)
+		{
+			gr.dibujarGraficaBarras(g2d, xFig, yFig);
+		}
+			
 	}
 
+	class Arrastre extends MouseMotionAdapter
+	{
+		@Override
+		public void mouseDragged(MouseEvent e)
+		{
+			
+			repaint();
+		}
+	}
 }

@@ -105,8 +105,8 @@ public abstract class Calculo extends AbstractCalculo
 		return var.toString();
 		
 	}
-	
-	protected String borrar0_s(String val)
+
+	protected static String borrar0_s(String val)
 	{
 		StringBuilder var = new StringBuilder(val);
 		

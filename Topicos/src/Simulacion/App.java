@@ -1,47 +1,56 @@
 package Simulacion;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
 import java.io.File;
-import java.math.BigDecimal;
 
 import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
+import javax.swing.JTextField;
+
 
 public class App extends JFrame implements ItemListener, ActionListener
 {
 
 	private static final long serialVersionUID = 6340630260887584674L;
 	
-	MyRaddioButton cuadradosMedios,productosMedios,multipliConst,lineal,congruencialMult;
-	JButton ejecutar;
+	MyRaddioButton cuadradosMedios,productosMedios,multipliConst,lineal,congruencialMult,m;
+	
 	TablaDatos tabla;
+	
 	CuadradosMedios cmedios;
 	ProductosMedios pmedios;
 	MultiplicadorConstante multCons;
 	LinealCongruencial lc;
-	JPanel panelTabla;
 	AbstractCalculo refer;
+	
+	JPanel panelTabla;
+	
 	TablasEstadisticas tablaEst;
 	PruebaChi2 pruebaChi2;
 	PruebaKol_Smirov pruebaKSov;
-
-	JButton btnValCrit,btnAreaCurva,btnChi2,btbPruebaChi2,btnPruebaKS,btnPruPoker;
-	VentanaTablas ventana1,ventana2,ventana3,venataPC2,ventanaPKS;
+	PruebaHuecos pruebaHuecos;
+	CorridaUp_Down pruebaArrAb;
+	UpDownMedia pruebaUpMedia;
+	
+	
+	MenuActionsItem btnValCrit,btnAreaCurva,btnChi2,btnExe,btnWriteNum;
+	MenuActionsItem btbPruebaChi2,btnPruebaKS,btnPruPoker,btnPruebaHuecos,btnPruebaUp,btnPruebaUpM;
+	WindowAnimated ventana1,ventana2,ventana3,venataPC2,ventanaPKS,ventanaHuecos,
+					venetanaUp,ventanaUpM;
+	DialogWriter writer;
 	
 	Poker poker;
 	
@@ -61,50 +70,64 @@ public class App extends JFrame implements ItemListener, ActionListener
 			add(panelTabla,"Center");
 		}
 		
-		JPanel panelBotones = new JPanel();
 		
-		{
-			panelBotones.add(cuadradosMedios);
-			panelBotones.add(productosMedios);
-			panelBotones.add(multipliConst);
-			panelBotones.add(lineal);
-			panelBotones.add(congruencialMult);
-			
-			add(panelBotones,"North");
-		}
-		
-		JPanel panelEje = new JPanel();
-		
-		{
-			panelEje.add(ejecutar);
-			
-			add(panelEje,"South");
-		}
-		
-		
-		JPanel panelTablas = new JPanel();
-		{
-			panelTablas.setLayout(new GridLayout(6,1,25,25));
-			panelTablas.add(btnAreaCurva);
-			panelTablas.add(btnValCrit);
-			panelTablas.add(btnChi2);
-			panelTablas.add(btbPruebaChi2);
-			panelTablas.add(btnPruebaKS);
-			add(panelTablas,"West");
-		}
-		
-//		JScrollPane sc = new JScrollPane(pruebaChi2);
-		
-		
-		tabla.habilitar(cuadradosMedios.buttons);
+		tabla.habilitar(cuadradosMedios.vals,cuadradosMedios.buttons);
 		tabla.crearColumnas(columnas[0]);
 		refer = cmedios;
 		m = cuadradosMedios;
-		tabla.setRestrictions(restricciones[0]);
 		
-		
+		menuBar();
 	}
 
+	
+	
+	private void menuBar()
+	{
+		JMenuBar menuBar = new JMenuBar();
+		
+		setJMenuBar(menuBar);
+
+		JMenu programa = new JMenu("Programa");
+		{
+			menuBar.add(programa);
+			programa.add(btnExe);
+			
+			btnWriteNum = new MenuActionsItem("Escribir numeros aleatorios", 
+					()->{writer.setVisible(true);}, KeyEvent.VK_R, ActionEvent.CTRL_MASK);
+			btnWriteNum.addActionListener(this);
+			
+			programa.add(btnWriteNum);
+		}
+		
+		
+		
+		JMenu generar = new JMenu("Generador Aleatorios");
+		{
+			generar.add(cuadradosMedios);
+			generar.add(productosMedios);
+			generar.add(multipliConst);
+			generar.add(lineal);
+			generar.add(congruencialMult);
+		}
+		
+		JMenu pruebasEst = new JMenu("Pruebas estadisticas");
+		pruebasEst.add(btbPruebaChi2);
+		pruebasEst.add(btnPruebaKS);
+		pruebasEst.add(btnPruPoker);
+		pruebasEst.add(btnPruebaHuecos);
+		pruebasEst.add(btnPruebaUpM);
+		pruebasEst.add(btnPruebaUp);
+		
+		JMenu tablasEst = new JMenu("Tablas de Estadisticas");
+		tablasEst.add(btnAreaCurva);
+		tablasEst.add(btnChi2);
+		tablasEst.add(btnValCrit);
+		
+		menuBar.add(generar);
+		menuBar.add(pruebasEst);
+		menuBar.add(tablasEst);
+		
+	}
 	
 	private void init()
 	{
@@ -115,81 +138,133 @@ public class App extends JFrame implements ItemListener, ActionListener
 		multCons = new MultiplicadorConstante();
 		lc =  new LinealCongruencial();		
 		
-		cuadradosMedios = new MyRaddioButton("Cuadrados medios",0,0,cmedios,"Semilla","Nro. semillas");
-		//Que la semilla sea mayor a 3 digitos, numero de semillas > 0
+		cuadradosMedios = new MyRaddioButton("Cuadrados medios",0,0,cmedios,
+				new boolean[] {true,false},
+				"Semilla","Nro. semillas");
+		cuadradosMedios.atajo(KeyEvent.VK_J, ActionEvent.CTRL_MASK);
 		
 		cuadradosMedios.setSelected(true);
 		cuadradosMedios.addItemListener(this);
 		
-		productosMedios = new MyRaddioButton("Productos Medios",1,1,pmedios,"Semilla","Semilla2",
-				"Nro. semillas");
-		//Que ambas semillas sean del mismo tamaño, y mayores a 3 digito,numerode semillas>0
+		productosMedios = new MyRaddioButton("Productos Medios",1,1,pmedios,
+				new boolean[] {true,true,false},
+				"Semilla","Semilla2","Nro. semillas");
+		productosMedios.atajo(KeyEvent.VK_K, ActionEvent.CTRL_MASK);
 		
 		productosMedios.addItemListener(this);
 		
-		multipliConst = new MyRaddioButton("Multiplicador constante",2,1,multCons,"Constante","Semilla"
-				,"Nro. semillas");
-
+		multipliConst = new MyRaddioButton("Multiplicador constante",2,1,multCons,
+				new boolean[] {true,true,false},
+				"Constante","Semilla","Nro. semillas");
+		multipliConst.atajo(KeyEvent.VK_L, ActionEvent.CTRL_MASK);
+		
 		multipliConst.addItemListener(this);
 		
 		
-		lineal = new MyRaddioButton("Lineal",3,2,lc,"a","Semilla","c","Modulo","Nro. semillas");
-		//todo > 0
+		lineal = new MyRaddioButton("Lineal",3,2,lc,
+				new boolean[] {false,false,false,false,false},
+				"a","Semilla","c","Modulo","Nro. semillas");
+		lineal.atajo(KeyEvent.VK_M, ActionEvent.CTRL_MASK);
+		
 		lineal.addItemListener(this);
 		
 		congruencialMult = new MyRaddioButton("Congruencial multiplicativo",4,2,lc,
-							"a","Semilla","Modulo","Nro. semillas");
+				new boolean[] {false,false,false,false},
+				"a","Semilla","Modulo","Nro. semillas");
 		congruencialMult.addItemListener(this);
+		congruencialMult.atajo(KeyEvent.VK_N, ActionEvent.CTRL_MASK);
 		
 		poker = new Poker();
 				
 		
-		ejecutar = new JButton("Ejecutar");
-		ejecutar.setBackground(Color.black);
-		ejecutar.addActionListener(this);
-
-		tablaEst = (TablasEstadisticas) Serializa.writeObject
-				(new File(System.getProperty("user.dir")+"/src/Simulacion/Files/tabla.est"));
-//		tablaEst = new TablasEstadisticas();
-//		Serializa.saveObject(tablaEst, new File(System.getProperty
-//				("user.dir")+"/src/Simulacion/Files/tabla.est"));
+		btnExe = new  MenuActionsItem("Ejecutar",()->execute(), KeyEvent.VK_E,
+										ActionEvent.CTRL_MASK);
+		btnExe.addActionListener(this);
+		
+		crearTablasEst();
 		
 		tabla = new TablaDatos();
 		
-		ventana1 = new VentanaTablas(tablaEst.scABC,1100,650);
-		ventana2 = new VentanaTablas(tablaEst.scChi2,1100,650);
-		ventana3 = new VentanaTablas(tablaEst.scVC,800,550);
+		ventana1 = new WindowAnimated("Tabla valores area bajo la curva",tablaEst.scABC,1100,650,true,null);
+		ventana2 = new WindowAnimated("Tabla de Chi cuadrada",tablaEst.scChi2,1100,650,true,null);
+		ventana3 = new WindowAnimated("Tabla de valores criticos",tablaEst.scVC,800,550,true,null);
+		
 
 		
-		btnAreaCurva = new JButton("Area Bajo Curva");
-		btnAreaCurva.setBackground(Color.white);
-//		btnAreaCurva.setToolTipText("Area bajo la curva");
+		btnAreaCurva = new MenuActionsItem("Tabla Area Bajo Curva",()->ventana1.setVisible(true),
+				KeyEvent.VK_F,
+				ActionEvent.ALT_MASK);
 		btnAreaCurva.addActionListener(this);
 		
-		btnChi2 = new JButton("Tabla de Chi2");
-		btnChi2.setBackground(Color.white);
-//		btnChi2.setToolTipText("Tabla de Chi2");
+		btnChi2 = new MenuActionsItem("Tabla de Chi2", ()->ventana2.setVisible(true),
+				KeyEvent.VK_G,
+				ActionEvent.ALT_MASK);
+		
 		btnChi2.addActionListener(this);
 		
-		btnValCrit = new JButton("Tabla de valores criticos");
-		btnValCrit.setBackground(Color.white);
-//		btnValCrit.setToolTipText("Tabla de valores criticos");
+		btnValCrit = new MenuActionsItem("Tabla de valores criticos",()->ventana3.setVisible(true),
+				KeyEvent.VK_H,
+				ActionEvent.ALT_MASK);
+		
 		btnValCrit.addActionListener(this);
 		
-		btbPruebaChi2 = new JButton("Pruebba de Chi2");
+		
+		btbPruebaChi2 = new MenuActionsItem("Pruebba de Chi2",()->venataPC2.setVisible(true),
+				KeyEvent.VK_C,
+				ActionEvent.ALT_MASK);
+		
 		btbPruebaChi2.addActionListener(this);
 		
-		btnPruebaKS = new JButton("Prueba de  kolmogorov-smirnov");
+		btnPruebaKS = new MenuActionsItem("Prueba de  kolmogorov-smirnov",()->ventanaPKS.setVisible(true),
+				KeyEvent.VK_K,
+				ActionEvent.ALT_MASK);
+		
 		btnPruebaKS.addActionListener(this);
 		
-		btnPruPoker = new JButton("Prueba Poker");
+		btnPruPoker = new MenuActionsItem("Prueba Poker",()->poker.setVisible(true),
+				KeyEvent.VK_P,
+				ActionEvent.ALT_MASK);
+		
 		btnPruPoker.addActionListener(this);
 		
+
+		pruebaHuecos = new PruebaHuecos();
+		ventanaHuecos = new WindowAnimated("Prueba de Huecos", new JScrollPane(pruebaHuecos), 
+				800, 300,false,pruebaHuecos);
+		buildHuecos();
+		btnPruebaHuecos = new MenuActionsItem("Prueba de Huecos", ()-> ventanaHuecos.setVisible(true),
+				KeyEvent.VK_H,
+				ActionEvent.ALT_MASK);
+		btnPruebaHuecos.addActionListener(this);
+		
 		pruebaChi2 = new  PruebaChi2();
-		venataPC2 = new VentanaTablas(new JScrollPane(pruebaChi2), 800, 660);
+		venataPC2 = new WindowAnimated("Prueba de Chi cuadrada",new JScrollPane(pruebaChi2), 800, 660,
+				false,pruebaChi2);
 		
 		pruebaKSov = new PruebaKol_Smirov();
-		ventanaPKS = new VentanaTablas(new JScrollPane(pruebaKSov), 800, 660);
+		ventanaPKS = new WindowAnimated("Prueba de Kolmogorov-Smirnov",new JScrollPane(pruebaKSov), 800, 660,
+				false,pruebaKSov);
+		
+		
+		pruebaUpMedia = new UpDownMedia();
+		ventanaUpM = new WindowAnimated("Prueba arriba y abajo de la media", 
+				new JScrollPane(pruebaUpMedia), 500, 300, false, pruebaUpMedia);
+		btnPruebaUpM = new MenuActionsItem("Prueba arriba/abajo media", 
+				()->ventanaUpM.setVisible(true), 
+				KeyEvent.VK_I,
+				ActionEvent.ALT_MASK);
+		btnPruebaUpM.addActionListener(this);
+		
+		pruebaArrAb = new CorridaUp_Down();
+		venetanaUp = new WindowAnimated("Prueba arriba y abajo", 
+				new JScrollPane(pruebaArrAb), 500, 300, false, pruebaArrAb);
+		btnPruebaUp = new MenuActionsItem("Prueba arriba/abajo", 
+				()->venetanaUp.setVisible(true), 
+				KeyEvent.VK_J,
+				ActionEvent.ALT_MASK);
+		btnPruebaUp.addActionListener(this);
+		
+		writer = new DialogWriter();
 		
 		ButtonGroup bg = new ButtonGroup();
 		
@@ -199,107 +274,97 @@ public class App extends JFrame implements ItemListener, ActionListener
 		bg.add(lineal);
 		bg.add(congruencialMult);
 		
+		
 	}
 	
-	public Validar restricciones[] =
-		{
-			(a)->
+	private void buildHuecos()
+	{
+		JPanel sur = new JPanel();
+		
+		ventanaHuecos.add(sur,"South");
+		
+		JTextField txtAlfa = new JTextField(10);
+		JTextField txtBeta = new JTextField(10);
+		
+		sur.add(new JLabel("Alfa: "));
+		sur.add(txtAlfa);
+		sur.add(new JLabel("Beta: "));
+		sur.add(txtBeta);
+		
+		JButton est = new JButton("Establecer parametros");
+		
+		est.addActionListener((a)->{
+			
+			String text = txtAlfa.getText();
+			String text2 = txtBeta.getText();
+			
+			try
 			{
+				Double v = Double.parseDouble(text);
+				Double v2 = Double.parseDouble(text2);
 				
-				if(a[0]>3)
+				if(v.compareTo(v2)>0)
 				{
-					if(a[1]>0)
-						return true;
-					
-					throw new MiExcepcion("Debe generar al menos una iteracion");
+					JOptionPane.showMessageDialog(ventanaHuecos, "Beta debe ser mayor igual "
+							+ "que alfa","Error Alfa-Beta",JOptionPane.ERROR_MESSAGE);
+					return;
 				}
-			
-				throw new MiExcepcion("Debe ingresar una semilla de 4 digitos o mas");
-			},	
-			
-			(a)->
-			{
-				if(a[0]>3)
+				if(v.doubleValue()<0 || v.doubleValue()>1 || v2.doubleValue()<0 || v2.doubleValue()>1)
 				{
-					if(a[1]==a[0])
-					{
-						if(a[2]>0)
-							return true;
-						
-						throw new MiExcepcion("Debe generar al menos una iteracion");
-					}
-					else throw new MiExcepcion("Ambas semillas deben tener el mismo tamaño");
-				}
-				else throw new MiExcepcion("Debe ingresar una semilla de 4 digitos o mas");
-			},
-			
-			(a)->
-			{
-				for(int x : a)
-				{
-					if(x==0)
-						throw new MiExcepcion("Los valores deben ser mayores a 0");
+					JOptionPane.showMessageDialog(ventanaHuecos, "Alfa y beta deben estar en el intervalo"
+							+ "(0-1)","Error Alfa-Beta",JOptionPane.ERROR_MESSAGE);
+					return;
 				}
 				
-				return true;
+				pruebaHuecos.establecerParametros(text, text2);
+			}
+			catch(NumberFormatException e)
+			{
+				JOptionPane.showMessageDialog(ventanaHuecos, "Solo valores numericos",
+						"Error Alfa-Beta",JOptionPane.ERROR_MESSAGE);
 			}
 			
-		};
+		});
+		
+		sur.add(est);
+	}
+	
+	private void crearTablasEst()
+	{
+		tablaEst = (TablasEstadisticas) Serializa.writeObject
+				(new File(System.getProperty("user.dir")+"/src/Simulacion/Files/tabla.est"));
+//		tablaEst = new TablasEstadisticas();
+//		Serializa.saveObject(tablaEst, new File(System.getProperty
+//				("user.dir")+"/src/Simulacion/Files/tabla.est"));
+	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) 
 	{
-		if(ejecutar == arg0.getSource())
-		{
-			try
-			{
-				refer.calcular(tabla.getDatos(m.getIDRestriction()<=1));
-				tabla.agregaReng(refer.resultado);
-//				pruebaChi2.generar();
-//				pruebaKSov.generar();
-//				poker.generar();
-				
-			}
-			catch (NumberFormatException e) 
-			{
-				JOptionPane.showMessageDialog(this, "Debe ingresar valores enteros", 
-						"Advertencia", JOptionPane.WARNING_MESSAGE);
-			}
-			catch(MiExcepcion e) {
-				JOptionPane.showMessageDialog(this, e.getMessage(), 
-						"Error", JOptionPane.ERROR_MESSAGE);
-			}
-		}
+		MenuActionsItem e = (MenuActionsItem) arg0.getSource();
 		
-		else if(arg0.getSource() == btnChi2)
+		e.action();
+	}
+	
+	private void execute()
+	{
+		try
 		{
-			ventana2.setVisible(true);
-		}
-		
-		else if(arg0.getSource() == btnValCrit)
-		{
-			ventana3.setVisible(true);
+			refer.calcular(tabla.getDatos());
+			tabla.agregaReng(refer.resultado);
 			
 		}
-		
-		else if(arg0.getSource() == btnAreaCurva)
+		catch (NumberFormatException e) 
 		{
-			ventana1.setVisible(true);
+			tabla.selecError();
+			JOptionPane.showMessageDialog(this, "Debe ingresar valores enteros", 
+					"Advertencia", JOptionPane.WARNING_MESSAGE);
+			tabla.backSelection();
 		}
-		
-		else if(arg0.getSource() == btbPruebaChi2)
-		{
-			venataPC2.setVisible(true);
-		}
-		
-		else if(arg0.getSource() == btnPruebaKS)
-		{
-			ventanaPKS.setVisible(true);
-		}
-
-		else if(arg0.getSource() == btnPruPoker)
-		{
-			poker.setVisible(true);
+		catch(MiExcepcion e) {
+			JOptionPane.showMessageDialog(this, e.getMessage(), 
+					"Error", JOptionPane.ERROR_MESSAGE);
+			tabla.backSelection();
 		}
 		
 	}
@@ -314,9 +379,6 @@ public class App extends JFrame implements ItemListener, ActionListener
 			};
 	
 	
-	MyRaddioButton m;
-
-	
 	
 	@Override
 	public void itemStateChanged(ItemEvent e)
@@ -325,47 +387,9 @@ public class App extends JFrame implements ItemListener, ActionListener
 		m = (MyRaddioButton) e.getSource();
 		
 		refer = m.calc;
-		tabla.setRestrictions(restricciones[m.getIDRestriction()]);
-		tabla.habilitar(m.buttons);
+		tabla.habilitar(m.vals,m.buttons);
 		tabla.crearColumnas(columnas[m.getID()]);
 		tabla.validate();
-		
-	}
-	
-	class VentanaTablas extends JDialog
-	{
-		JButton btnOk,btnCanc,btnConf;
-		
-		public VentanaTablas(JScrollPane sc,int width,int height) 
-		{
-			setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-			setSize(width, height);
-			setLocationRelativeTo(null);
-			setLayout(new BorderLayout());
-			add(sc,"Center");
-
-			
-			JPanel panelBtn = new JPanel();
-			
-			{
-				btnOk = new JButton("Guardar cambios");
-				btnCanc = new JButton("Cancelar");
-				
-				panelBtn.add(btnOk);
-				panelBtn.add(btnCanc);
-			}
-			
-			add(panelBtn,"South");
-			
-			JPanel panelCon = new JPanel();
-			
-			{
-				panelCon.add(btnConf = new JButton("Configurar"));
-				
-				add(panelCon,"North");
-			}
-			
-		}
 		
 	}
 }

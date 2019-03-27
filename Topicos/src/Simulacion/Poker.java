@@ -8,6 +8,7 @@ import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.Set;
 
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -16,7 +17,7 @@ import javax.swing.table.DefaultTableModel;
 
 import static Simulacion.MathData.valoresXi;
 
-public class Poker extends JDialog
+public class Poker extends JDialog implements Prueba
 {
 	private String[] seedsBydigits;
 	
@@ -59,9 +60,11 @@ public class Poker extends JDialog
 			add(centro,"Center");
 		}
 		
+		JButton btnGen = new JButton("Generar Prueba");
 		JPanel up = new JPanel();
-		
 		{
+			up.add(btnGen);
+			btnGen.addActionListener((a)->generar());
 			add(up,"North");
 		}
 		

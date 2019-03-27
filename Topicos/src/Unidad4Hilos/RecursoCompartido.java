@@ -1,57 +1,67 @@
 package Unidad4Hilos;
 
+import java.io.IOException;
 import java.util.Random;
 
-class HilosRec implements Runnable
+class MyTread extends Thread
 {
 	RecursoCompartido rc;
-	Thread hilos[];
+	int pos,n;
 	
-	public HilosRec(RecursoCompartido rec, int cantHi)
+	public MyTread(RecursoCompartido rec, int posIni,int inc,String name)
 	{
-		hilos = new Thread[cantHi];
+		super(name);
+		pos = posIni;
+		n = inc;
 		rc = rec;
-		
-		for(int i=0; i<hilos.length; i++)
-		{
-			hilos[i] = new Thread(this,"Hilo"+(i+1));
-			hilos[i].start();
-		}
-		
-		
 	}
 	
 	@Override
-	public void run()
+	public  void run()
 	{
-//		synchronized(rc)
+		while(pos<10)
 		{
-			while(rc.pos<10)
+			synchronized (rc)
 			{
-				System.out.print(Thread.currentThread().getName()+": ");
-				System.out.println(rc.obtener());
-				
 				try
 				{
+					System.out.print(getName()+": ");
+					System.out.println(rc.obtener(pos));
+					pos+=n;
 					Thread.sleep(1);
 					
 					
-				} catch (InterruptedException e)
+				} catch (InterruptedException  e)
 				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					break;
 				}
 			}
 		}
+		
+			
 	}
+}
+
+class CreadorHilos
+{
+	MyTread[] arr;
 	
+	public CreadorHilos(int cant, RecursoCompartido rc)
+	{
+		arr = new MyTread[cant];
+		
+		for(int i=0; i<arr.length; i++)
+		{
+			arr[i] = new MyTread(rc,i, arr.length,"h"+i);
+			arr[i].start();
+		}
+	}
 }
 
 public class RecursoCompartido
 {
 	private int vec[];
-	public  int pos;
-	
+
 	public RecursoCompartido(int tam)
 	{
 		vec = new int[tam];
@@ -64,9 +74,9 @@ public class RecursoCompartido
 		}
 	}
 	
-	public int obtener()
+	public int obtener(int pos)
 	{
-		return vec[pos++];
+		return vec[pos];
 	}
 	
 	public void mostrar()
@@ -83,9 +93,8 @@ public class RecursoCompartido
 	
 		rc.mostrar();
 		System.out.println();
+		new CreadorHilos(3, rc);
 		
-		HilosRec hilo = new HilosRec(rc,3);
-//		
 //		try
 //		{
 //			h1.join();

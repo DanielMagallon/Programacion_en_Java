@@ -1,6 +1,7 @@
 package Simulacion;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -11,25 +12,21 @@ import javax.swing.table.DefaultTableModel;
 
 public class TablaDatos extends JPanel
 {
-	DefaultTableModel modelo;
-	JTable table;
-	JPanel panelConf,panelUp;
-	JLabel[] lbls;
+	private static final long serialVersionUID = -4656933219233483570L;
+	private DefaultTableModel modelo;
+	private JTable table;
+	private JPanel panelConf,panelUp;
+	private JLabel[] lbls;
 	public JTextField txtFs[];
-	public Validar valid;
+	private int x,i;
+	private boolean validaciones[];
+	private Color color;
 	
 	public TablaDatos()
 	{
 		setLayout(new BorderLayout());
 		
-		modelo  = new DefaultTableModel() 
-		{
-//			@Override
-//			public boolean isCellEditable(int row, int column) 
-//			{
-//				return row == 0 && column == 1;
-//			}
-		};
+		modelo  = new DefaultTableModel();
 		
 		table = new JTable();
 		JScrollPane sc = new JScrollPane(table);
@@ -37,6 +34,7 @@ public class TablaDatos extends JPanel
 		table.setModel(modelo);
 	
 		panelConf = new JPanel();
+		color = Color.yellow;
 		
 		add(panelConf,"North");
 		add(sc,"Center");
@@ -52,25 +50,20 @@ public class TablaDatos extends JPanel
 				lbls[i] = new JLabel();
 				txtFs[i] = new JTextField(10);
 				txtFs[i].setVisible(false);
-				
+				txtFs[i].setSelectionColor(color);
 				panelUp.add(lbls[i]);
 				panelUp.add(txtFs[i]);
 			}
 			
 			add(panelUp,"North");
 		}
+		//r=184,g=207,b=229
 		
 	}
 	
-	public void setRestrictions(Validar v)
+	public void habilitar(boolean []vals,String...comps)
 	{
-		valid = v;
-	}
-	
-	private int x;
-	
-	public void habilitar(String...comps)
-	{
+		validaciones = vals;
 		x = comps.length;
 		
 		for(int i=0; i<lbls.length; i++)
@@ -88,27 +81,66 @@ public class TablaDatos extends JPanel
 		}
 	}
 	
-	public String[] getDatos(boolean inSize) throws MiExcepcion, NumberFormatException
+	public String[] getDatos() throws MiExcepcion, NumberFormatException
 	{
 		String x[] = new String[this.x];
 		int y[] = new int[this.x];
 		
-		for(int i=0; i<this.x; i++)
+		for(i=0; i<this.x; i++)
 		{
-			x[i] = txtFs[i].getText();
 			
-			if(inSize)
-			y[i] = txtFs[i].getText().length();
-			
-			else
-				y[i] = Integer.parseInt(txtFs[i].getText());
+			if(validaciones[i])
+			{
+				x[i] = Calculo.borrar0_s(txtFs[i].getText().trim()).replace("+", "")
+						.replace("-", "");
+				y[i] = Integer.parseInt(x[i]);
+				
+				y[i] = x[i].length();
+				
+				if(i>0)
+				{
+					if(y[i]!=y[i-1])
+					{
+						selecError();
+						throw new MiExcepcion("Las semillas deben tener la misma cantidad de digitos");
+					}
+				}
+				
+				else if(y[i]<=3)
+				{
+					selecError();
+					throw new MiExcepcion("Las semillas deben ser mayores a 4 digitos");
+				}
+			}
+			else 
+			{
+				x[i] = txtFs[i].getText();
+				y[i] = Integer.parseInt(x[i]);
+				
+				if(y[i]<=0)
+				{
+					selecError();
+					throw new MiExcepcion("Los valores deben ser mayores a 0");
+				}
+				
+			}
+				
 		}
 		
-		y[this.x-1] = Integer.parseInt(txtFs[this.x-1].getText());
 		
-		valid.validar(y);
-			
 		return x;
+	}
+	
+	public void selecError()
+	{
+		txtFs[i].requestFocus();
+		txtFs[i].setSelectionColor(Color.red);
+		txtFs[i].selectAll();
+	}
+	
+	public void backSelection()
+	{
+		txtFs[i].setSelectionColor(color);
 	}
 	
 	public void crearColumnas(String...cols)
@@ -129,4 +161,5 @@ public class TablaDatos extends JPanel
 			modelo.addRow(val[i]);
 		}
 	}
+	
 }

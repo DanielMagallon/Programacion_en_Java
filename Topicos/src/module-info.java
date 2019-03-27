@@ -16,5 +16,6 @@ module Topicos
 	requires show;
 	requires java.desktop;
 	requires stringop;
+	requires jdk.jdi;
 	
 }
