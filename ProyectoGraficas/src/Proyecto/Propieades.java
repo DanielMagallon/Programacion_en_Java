@@ -1,8 +1,6 @@
 package Proyecto;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
@@ -17,14 +15,18 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class Fuentes extends JDialog
+public class Propieades extends JDialog
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4515859170734946919L;
 	public static Font fuente = new Font("Arial", Font.BOLD, 32);
 	public static Color colorfuente = Color.black;
 	JComboBox<String> fonts;
 	JComboBox<Integer> tamanioF;
 	
-	public Fuentes(JFrame f)
+	public Propieades(JFrame f)
 	{
 		super(f, true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -79,7 +81,7 @@ public class Fuentes extends JDialog
 				public void mouseClicked(MouseEvent e)
 				{
 					colorfuente = JColorChooser.showDialog
-							(Fuentes.this, "Escoga un color", colorfuente);
+							(Propieades.this, "Escoga un color", colorfuente);
 					
 					col.setBackground(colorfuente);
 				}

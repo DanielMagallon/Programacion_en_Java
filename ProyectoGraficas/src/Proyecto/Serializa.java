@@ -2,6 +2,7 @@ package Proyecto;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -26,18 +27,11 @@ public class Serializa
 	}
 	
 	@SuppressWarnings("resource")
-	public static Object writeObject(File file)
+	public static Object writeObject(File file) throws FileNotFoundException, IOException, 
+							ClassNotFoundException
 	{
-		try 
-		{
 		    ObjectInputStream entrada=new ObjectInputStream(new FileInputStream(file));
 			return entrada.readObject();
 			
-		} 
-		catch (ClassNotFoundException | IOException e) 
-		{
-			e.printStackTrace();
-			return null;
-		}
 	}
 }
