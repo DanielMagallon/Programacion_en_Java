@@ -3,6 +3,7 @@ package Simulacion;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.math.BigDecimal;
+import java.math.MathContext;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -20,8 +21,7 @@ public abstract class CorridasPanel extends JPanel implements Prueba
 	public CorridasPanel()
 	{
 		font = new Font("Arial", Font.BOLD, 18);
-		
-		
+	
 		setLayout(new GridLayout(4, 1,0,5));
 		
 		panelMco = new JPanel();

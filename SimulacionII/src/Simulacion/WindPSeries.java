@@ -16,9 +16,12 @@ import static Simulacion.MathData.valoresXi;
 public class WindPSeries extends JDialog
 {
 	private Grafica grafica;
+	private PruebaSeries pser;
+	private JButton informe;
 	
 	public WindPSeries()
 	{
+		pser = new PruebaSeries();
 		setLayout(new BorderLayout());
 		setModal(true);
 		setSize(this.getParent().getSize());
@@ -47,7 +50,7 @@ public class WindPSeries extends JDialog
 							"Conjunro Ri Vacio/Tamaño 1",JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				
+				informe.setEnabled(false);
 				createPoints();
 				grafica.graphicPoints();
 			});
@@ -59,7 +62,9 @@ public class WindPSeries extends JDialog
 				{
 					if(valoresXi!=null && valoresXi.length!=1)
 					{
-					grafica.dividirEspacio();
+						grafica.dividirEspacio();
+						pser.generar(grafica.divX, grafica.divY);
+						informe.setEnabled(true);
 					}
 					else JOptionPane.showMessageDialog(this, "No es posible dividir con el conjunto Ri dado",
 							"Conjunro Ri Vacio/Tamaño 1",JOptionPane.ERROR_MESSAGE);
@@ -67,6 +72,16 @@ public class WindPSeries extends JDialog
 			);
 			
 			ok.add(dividir);
+			
+			informe = new JButton("Tabla de valores");
+			
+			informe.addActionListener((a)->{
+				
+				pser.setVisible(true);
+				
+			});
+			informe.setEnabled(false);
+			ok.add(informe);
 		}
 	}
 	
@@ -75,28 +90,39 @@ public class WindPSeries extends JDialog
 		
 		grafica.points = new int[valoresXi.length-1][2];
 		grafica.colores = new Color[valoresXi.length-1];
-		String twoDig,cad;
+		String twoDig="",cad="";
 		Random lb = new Random();
-		int index;
+		int index,i=0;
 		
-			for(int i=0; i<grafica.points.length; i++)
+		try
+		{
+			for(;i<grafica.points.length; i++)
 			{
 					grafica.colores[i] = new Color
 							(lb.nextInt(256),lb.nextInt(256),lb.nextInt(256));
 				
-					cad = valoresXi[i]+"";
+					cad = valoresXi[i].toPlainString();
 					index = cad.indexOf(".");
 					twoDig = (cad).substring
 							(index+1, index+3);
 					
 					grafica.points[i][0] = Integer.parseInt(twoDig);
 					
-					cad = valoresXi[i+1]+"";
+					cad = valoresXi[i+1].toPlainString();
+					
 					index = cad.indexOf(".");
 					twoDig = (cad).substring
 							(index+1, index+3);
 					
+					
 					grafica.points[i][1] = Integer.parseInt(twoDig);
+					
 				}
+		}
+		catch(NumberFormatException e)
+		{
+			JOptionPane.showMessageDialog(this, "Error de conversion "+cad+": "+twoDig);
+		}
+			
 	}
 }

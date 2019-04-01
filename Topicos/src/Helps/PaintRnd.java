@@ -9,6 +9,8 @@ import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
+import Libreria.Grafica;
+
 public class PaintRnd extends JFrame 
 {
 
@@ -18,7 +20,7 @@ public class PaintRnd extends JFrame
 	int x,i,j;
 	boolean d;
 	P p = new P();
-	
+	Grafica gr = new Grafica();
 	public PaintRnd() 
 	{
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -29,6 +31,8 @@ public class PaintRnd extends JFrame
 		JButton btn = new JButton("A");
 		add(btn,"South");
 		add(p,"Center");
+		
+		gr.setDatos(new int[] {100,200,700}, new String[] {"Hola","Mundo","Juan"});
 		
 		btn.addActionListener
 		(
@@ -47,26 +51,31 @@ public class PaintRnd extends JFrame
 			super.paint(g);
 			if(d)
 			{
-				for(i=0; i<=getHeight(); i+=incI)
-				{
-					for(j=0; j<=getWidth(); j+=incJ)
-					{
-						 Color color = new Color(r.nextInt(256),r.nextInt(256),r.nextInt(256));
-						 g.setColor(color);
-						
-//						 x = r.nextInt(2);
-//						
-//							if(x==0)
-//								g.setColor(Color.black);
-//							
-//							else g.setColor(Color.white);
-
-							g.fillRect(j, i, i+incJ, j+incI);
-//							g.drawLine(j, i, i*x, j*x);
-					}
-				}
-				
+				gr.dibujarBarraPastel(g, 20, 30);
+				gr.dibujarGraficaBarras(g, 100, 100);
 			}
+//			if(d)
+//			{
+//				for(i=0; i<=getHeight(); i+=incI)
+//				{
+//					for(j=0; j<=getWidth(); j+=incJ)
+//					{
+//						 Color color = new Color(r.nextInt(256),r.nextInt(256),r.nextInt(256));
+//						 g.setColor(color);
+//						
+////						 x = r.nextInt(2);
+////						
+////							if(x==0)
+////								g.setColor(Color.black);
+////							
+////							else g.setColor(Color.white);
+//
+//							g.fillRect(j, i, i+incJ, j+incI);
+////							g.drawLine(j, i, i*x, j*x);
+//					}
+//				}
+//				
+//			}
 		}
 	}
 	

@@ -17,6 +17,7 @@ public class CorridaUp_Down extends CorridasPanel
 	public void generar()
 	{
 		Co=1;
+		cero= false;
 		for(int i=1; i<valoresXi.length; i++)
 		{
 			if(valoresXi[i-1].compareTo(valoresXi[i])<=0)
@@ -48,32 +49,10 @@ public class CorridaUp_Down extends CorridasPanel
 		Zo = new BigDecimal(Co).subtract(MCo).divide(VarianzaCo.sqrt(new MathContext(4)),
 									4, RoundingMode.HALF_EVEN);
 		
+		if(Zo.doubleValue()<0)
+			Zo = Zo.multiply(new BigDecimal("-1"));
+		
 		super.generar();
 	}
-	
-//	public static void main(String[] args)
-//	{
-//		/*.63,.85,.08,.86,.91,.26,
-//						.32,.73,.17,.01,.51,.02,
-//						.49*/
-//		
-////		new CorridaUp_Down().generar(new Double[] 
-////				{
-////						.4864,
-////						.3709,
-////						.3839,
-////						.5931,
-////						.2072,
-////						 .5659,
-////						 .7391,
-////						 .7199,
-////						 .3844,
-////						 .7015,
-////						 .0728,
-////						 .2528,
-////						 .3506,
-////						 .0338,
-////						 .8164
-////				});
-//	}
+
 }

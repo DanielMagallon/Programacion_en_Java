@@ -12,6 +12,11 @@ public class MathData
 		valoresXi[i] = val;
 	}
 	
+	public static BigDecimal getN()
+	{
+		return new BigDecimal(valoresXi.length);
+	}
+	
 	public static int getSqrtN()
 	{
 		return (int)Math.round(Math.sqrt(valoresXi.length));

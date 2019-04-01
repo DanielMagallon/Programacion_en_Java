@@ -2,6 +2,10 @@ package Simulacion;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.KeyEventPostProcessor;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -60,6 +64,7 @@ public class WindowAnimated extends JDialog
 		}
 		
 		add(panelBtn,"North");
+		
 	}
 	
 }

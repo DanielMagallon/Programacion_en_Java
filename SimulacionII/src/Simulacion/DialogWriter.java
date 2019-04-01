@@ -104,6 +104,9 @@ public class DialogWriter extends JDialog implements ActionListener
 					if(text.length()==1)
 						return;
 					
+					if(text.length()==2)
+						text+="0";
+					
 					b = new BigDecimal(text);
 					
 					modelo.addElement(b);

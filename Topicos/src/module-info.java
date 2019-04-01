@@ -17,5 +17,6 @@ module Topicos
 	requires java.desktop;
 	requires stringop;
 	requires jdk.jdi;
+	requires java.logging;
 	
 }

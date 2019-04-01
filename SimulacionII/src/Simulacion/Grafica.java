@@ -22,7 +22,7 @@ public class Grafica extends JPanel
 	private static final long serialVersionUID = 8456043879017609254L;
 
 	private int x=70,y=100,lado=1000,incYH=40,incYV=10,interseY=lado+y+incYV,iy,ix;
-	private int ejeX=-1,ejeY,divX,divY,pointDivX,pointDivY,i,p,ind=-1;
+	public int ejeX=-1,ejeY,divX,divY,pointDivX,pointDivY,i,p,ind=-1;
 	public int points[][];
 	public Color colores[];
 	private int[][] divisores;

@@ -52,7 +52,10 @@ public class PruebaChi2 extends JTable implements Prueba
 		
 		for(i=0;i<tablaResultados.length; i++)
 		{
-			tablaResultados[i][0] = "<="+rango;
+			if(i==tablaResultados.length-1)
+				tablaResultados[i][0] = "<=1.00000";
+			
+			else tablaResultados[i][0] = "<="+rango;
 			claveFrecuencias.put(rango, i);
 			tablaResultados[i][2] = Ei+"";
 			rango = rango.add(v);

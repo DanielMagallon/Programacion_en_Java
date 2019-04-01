@@ -54,6 +54,9 @@ public class UpDownMedia extends CorridasPanel
 		Zo = new BigDecimal(Co).subtract(MCo).divide(VarianzaCo.sqrt(new MathContext(4)),
 				4, RoundingMode.HALF_EVEN);
 		
+		if(Zo.doubleValue()<0)
+			Zo = Zo.multiply(new BigDecimal("-1"));
+		
 		super.generar();
 	}
 

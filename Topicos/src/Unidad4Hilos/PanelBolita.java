@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 public class PanelBolita extends JPanel
 {
 	JFrame jframe;
-	Bolita bolitas[];
+	BolitaSwing bolitas[];
 	
 	public PanelBolita(int cant)
 	{
@@ -26,17 +26,17 @@ public class PanelBolita extends JPanel
 //		{
 //			bolitas[i] = new Bolita(this);
 //		}
-		bolitas = new Bolita[cant];
+		bolitas = new BolitaSwing[cant];
 		for(int i=0; i<cant; i++)
 		{
-			bolitas[i] = new Bolita(this);
-			bolitas[i].start();
+			bolitas[i] = new BolitaSwing(this);
+			bolitas[i].execute();
 		}
 		
 	}
 	
 	@Override
-	protected void paintComponent(Graphics arg0)
+	protected  void paintComponent(Graphics arg0)
 	{
 		super.paintComponent(arg0);
 		for(int i=0; i<bolitas.length; i++)
@@ -46,6 +46,6 @@ public class PanelBolita extends JPanel
 	
 	public static void main(String[] args)
 	{
-		new PanelBolita(200);
+		new PanelBolita(30);
 	}
 }

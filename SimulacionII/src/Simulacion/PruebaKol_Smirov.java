@@ -1,6 +1,7 @@
 package Simulacion;
 
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import static Simulacion.MathData.valoresXi;
@@ -13,6 +14,7 @@ public class PruebaKol_Smirov extends JTable implements Prueba
 {
 	DefaultTableModel modelo = new DefaultTableModel();
 	BigDecimal DM,Dm,DR;
+	JTextField txtd, txtD,  txtMD;
 	
 	public PruebaKol_Smirov()
 	{
@@ -30,18 +32,19 @@ public class PruebaKol_Smirov extends JTable implements Prueba
 	{
 		modelo.setRowCount(0);
 		BigDecimal i_n,i_1_n,resta,resta2,n = new BigDecimal(valoresXi.length) ;
-		Arrays.sort(valoresXi);
+		BigDecimal vals[] = valoresXi.clone();
+		Arrays.sort(vals);
 		DM = null;
 		Dm = null;
 		
 		
-		for(int i=0; i<valoresXi.length; i++)
+		for(int i=0; i<vals.length; i++)
 		{
 			i_n = new BigDecimal(i+1).divide(n,5,RoundingMode.DOWN);
 			i_1_n = new BigDecimal(i).divide(n,5,RoundingMode.DOWN);
 			
-			resta = i_n.subtract(valoresXi[i]);
-			resta2 = valoresXi[i].subtract(i_1_n);
+			resta = i_n.subtract(vals[i]);
+			resta2 = vals[i].subtract(i_1_n);
 
 			if(DM==null)
 			{
@@ -62,7 +65,7 @@ public class PruebaKol_Smirov extends JTable implements Prueba
 						{
 							(i+1),
 							i_n,
-							valoresXi[i],
+							vals[i],
 							i_1_n,
 							resta,
 							resta2,
@@ -73,5 +76,8 @@ public class PruebaKol_Smirov extends JTable implements Prueba
 
 		DR = DM.compareTo(Dm)>=0 ? DM : Dm;
 		
+		txtd.setText(Dm.toString());
+		txtD.setText(DM.toString());
+		txtMD.setText(DR.toString());
 	}
 }

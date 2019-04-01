@@ -58,7 +58,7 @@ public class App extends JFrame implements ItemListener, ActionListener
 	
 	public App() 
 	{
-		super("Simulacion");
+		super("Simulacion-Edgar Daniel Magallon Villanueva/Fernando Moises Lopez Escalera");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setExtendedState(MAXIMIZED_BOTH);
 		setLayout(new BorderLayout(10,10));
@@ -248,6 +248,7 @@ public class App extends JFrame implements ItemListener, ActionListener
 		pruebaKSov = new PruebaKol_Smirov();
 		ventanaPKS = new WindowAnimated("Prueba de Kolmogorov-Smirnov",new JScrollPane(pruebaKSov), 800, 660,
 				false,pruebaKSov);
+		buildpks();
 		
 		
 		pruebaUpMedia = new UpDownMedia();
@@ -286,6 +287,29 @@ public class App extends JFrame implements ItemListener, ActionListener
 		bg.add(congruencialMult);
 		
 		
+	}
+	
+	private void buildpks()
+	{
+		JPanel sur = new JPanel();
+		
+		ventanaPKS.add(sur,"South");
+		
+		JTextField txtD = new JTextField(10);
+		JTextField txtd = new JTextField(10);
+		JTextField txtDM = new JTextField(10);
+		
+		sur.add(new JLabel("D+: "));
+		sur.add(txtD);
+		sur.add(new JLabel("D-: "));
+		sur.add(txtd);
+		
+		sur.add(new JLabel("D mayor: "));
+		sur.add(txtDM);
+		
+		pruebaKSov.txtd = txtd;
+		pruebaKSov.txtD = txtD;
+		pruebaKSov.txtMD = txtDM;
 	}
 	
 	private void buildHuecos()
