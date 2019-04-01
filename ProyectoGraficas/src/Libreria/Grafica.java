@@ -25,7 +25,10 @@ public class Grafica implements Serializable
 	private final BigDecimal CIEN = new BigDecimal("100"),PI2 = new BigDecimal(360f);
 	private Random lb = new Random();
 	private Color[] colores;
+	private Font fontDatos;
 	private Color colorfuente;
+	private Font fontTitle;
+	private Color colorTitulo;
 	private BigDecimal porcentajes[];
 	private int alturasY[];
 	public int posicionesXYClick[][];
@@ -41,9 +44,35 @@ public class Grafica implements Serializable
 		colorEjes = Color.white;
 		anchoBarras = 40;
 		orientacion = NORTE;
-		colorfuente = Color.black;
+		colorTitulo = colorfuente = Color.black;
+		fontDatos = new Font("Sans Serif", Font.ITALIC, 32);
+		fontTitle = new Font("Sans Serif", Font.BOLD, 32);
 		
 		actualizarXY();
+	}
+	
+	
+	
+	public Grafica setFontTitle(Font f)
+	{
+		fontTitle = f;
+		return this;
+	}
+
+	public Grafica setDatosFont(Font f)
+	{
+		fontDatos = f;
+		return this;
+	}
+	
+	public Font getTitleFont()
+	{
+		return fontTitle;
+	}
+	
+	public Font getDatosFont()
+	{
+		return fontDatos;
 	}
 	
 	public void setDatos(int dispersion[], String categorias[])
@@ -106,6 +135,11 @@ public class Grafica implements Serializable
 		
 		anchoEjex=((anchoBarras+espacioBarras)*numCat+10);
 		actualizarXY();
+	}
+	
+	public void setColorEjes(Color c)
+	{
+		colorEjes = c;
 	}
 	
 	public Color[] getColores()
@@ -245,11 +279,22 @@ public class Grafica implements Serializable
 		else posXTitle = x  + radio/2 - 30;
 	}
 	
-	public void setTitle(Graphics g, String titulo, Color color, Font font)
+	public Grafica setDatosColor(Color c)
 	{
-		
-		g.setFont(font);
-		g.setColor(color);
+		colorfuente = c;
+		return this;
+	}
+	
+	public Grafica setTitleColor(Color c) 
+	{
+		colorTitulo = c;
+		return this;
+	}
+	
+	public void setTitle(Graphics g, String titulo)
+	{
+		g.setFont(fontTitle);
+		g.setColor(colorTitulo);
 		g.drawString(titulo, posXTitle,posYTitle);
 	}
 	
@@ -259,6 +304,7 @@ public class Grafica implements Serializable
 		g.setColor(colorEjes);
 		interseccion = mayor+y;
 		actualizarXY();
+		g.setFont(fontDatos);
 			
 		if(numCat>0)
 			if(vertical)
@@ -313,6 +359,7 @@ public class Grafica implements Serializable
 	{
 			if(disp!=null)
 			{
+				g.setFont(fontDatos);
 				deBarras = false;
 				actualizarXY();
 				BigDecimal val = BigDecimal.ZERO, grd;
@@ -355,7 +402,6 @@ public class Grafica implements Serializable
 	{
 		mayorlength=0;
 		int ny = y;
-		
 		//(y+radio)/2-20;
 		for(i=0; i<numCat; i++)
 		{

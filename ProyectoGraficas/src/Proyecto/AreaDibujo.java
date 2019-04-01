@@ -167,7 +167,7 @@ public class AreaDibujo extends JPanel implements Serializable
 		if(imgFondo)
 			g2d.drawImage(img, 0, 0, getWidth(), getHeight(), this);
 		
-		gr.setTitle(g2d, cad,Propieades.colorfuente,Propieades.fuente);
+		gr.setTitle(g2d, cad);
 		
 		if(TYPO_GRAFICA == 1)
 		{

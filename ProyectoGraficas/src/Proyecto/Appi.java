@@ -54,7 +54,7 @@ public class Appi extends JFrame
 	private JRadioButton rdNorte, rdSur;
 	private JButton btnAumentar, btnDecre, btnTablaCategrias, btnNuevaG, btnRefres, btnCerrar, btnRotarD, btnRotarIz;
 
-	private Propieades dialogFuentes;
+	private Propiedades dialogFuentes;
 
 	private int opc;
 	
@@ -72,11 +72,10 @@ public class Appi extends JFrame
 		opc = Grafica.BARRAS;
 		panelFunciones = new JPanel();
 
-		dialogFuentes = new Propieades(this);
-
 		tablaCategorias = new Categorias(path);
 
 		pestanas = new Pestanas(tablaCategorias);
+		dialogFuentes = new Propiedades(this,pestanas);
 		tablaCategorias.setTabbed(pestanas);
 
 		fondos = new PanelFondos(pestanas);
