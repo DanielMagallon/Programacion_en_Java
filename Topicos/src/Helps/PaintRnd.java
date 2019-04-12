@@ -49,11 +49,15 @@ public class PaintRnd extends JFrame
 		public void paint(Graphics g) 
 		{
 			super.paint(g);
+			
 			if(d)
-			{
-				gr.dibujarBarraPastel(g, 20, 30);
-				gr.dibujarGraficaBarras(g, 100, 100);
-			}
+				drawAsh(g);
+		
+//			if(d)
+//			{
+//				gr.dibujarBarraPastel(g, 20, 30);
+//				gr.dibujarGraficaBarras(g, 100, 100);
+//			}
 //			if(d)
 //			{
 //				for(i=0; i<=getHeight(); i+=incI)
@@ -78,6 +82,30 @@ public class PaintRnd extends JFrame
 //			}
 		}
 	}
+	
+	private int ash[]=
+		{0x0fc00000, 0x10200000, 0x20100000, 0x60380000, 0x83f80000, 0x61f80000, 0x29300000, 0x28300000,
+0x20200000, 0x10d00000, 0x0f900000, 0x06500000, 0x06500000, 0x09e00000, 0x08400000, 0x07800000};
+
+
+
+public void drawAsh(Graphics g)
+{
+	g.setColor(Color.black);
+	
+	int mascara = 1<<31;
+	
+	for (int i=0; i<ash.length; i++)
+	{
+		for (int c=0; c<=16; c++)
+		{
+			if((ash[i] & mascara >> 32) != 0)
+			{
+				g.drawLine(i, c, i, c);
+			}
+		}
+	}
+}
 	
 	public static void main(String[] args) {
 		new PaintRnd().setVisible(true);

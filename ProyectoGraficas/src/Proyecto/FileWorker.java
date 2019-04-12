@@ -10,8 +10,9 @@ import javax.swing.JOptionPane;
 
 public class FileWorker
 {
-	private static boolean elimated;
+	public static boolean elimated;
 	private static String carpetaRecurso; 
+	
 	public static void moveDelete(File sourceLocation, File targetLocation,String mk)
 	{
 			{
@@ -53,7 +54,7 @@ public class FileWorker
 		}
 	}
 	
-	private static void copy(File sourceLocation, File targetLocation,String mk) throws IOException 
+	public static void copy(File sourceLocation, File targetLocation,String mk) throws IOException 
 	{
 		System.out.println("Copiando: "+sourceLocation.getPath());
 		
@@ -65,7 +66,7 @@ public class FileWorker
 		    }
 	}
 		
-	private static void copyDirectory(File source, File target, String mk) throws IOException
+	public static void copyDirectory(File source, File target, String mk) throws IOException
 	{
 		File carpeta = new File(target.getPath() + "/" + mk + "/");
 		carpeta.mkdir();
@@ -79,11 +80,13 @@ public class FileWorker
 
 	}
 	
-	private static void copyFile(File source, File target) throws IOException {        
-	    try (
+	public static void copyFile(File source, File target) throws IOException {        
+	    try 
+	    (
 	            InputStream in = new FileInputStream(source);
 	            OutputStream out = new FileOutputStream(target)
-	    ) {
+	    ) 
+	    {
 	        byte[] buf = new byte[1024];
 	        int length;
 	        while ((length = in.read(buf)) > 0) {

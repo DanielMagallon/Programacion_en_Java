@@ -1,10 +1,52 @@
 package Proyecto;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 
 public class Trash
 {
+	/*
+	 * 			
+//			JLabel lblRe = new JLabel("Escalar en x/y g. barras");
+//			lblRe.setBounds(810, 15, 170, 30);
+//			btRezise = new JButton(getImageIcon("resize.png"));
+//			btRezise.setBounds(850, 45, 36, 36);
+//			btRezise.addActionListener((a)->
+//			{
+//				
+//				pestanas.getAreaDibujo().escalar(xScale,yScale);
+//				
+//			});
+//			btRezise.setBackground(Color.white);
+//			
+//			panelCongG.add(lblRe);
+//			panelCongG.add(btRezise);
+	 * 
+	 * 
+	MaximizedGraph mx = new MaximizedGraph();
+	
+	class MaximizedGraph extends JDialog
+	{
+		JScrollPane sc;
+		public MaximizedGraph()
+		{
+			setBounds((GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds()));
+			setModal(true);
+			
+			sc = new JScrollPane();
+			add(sc);
+		}
+		 
+		public MaximizedGraph setGraifca()
+		{
+			AreaDibujo ad = new AreaDibujo(area.getTypheGraph(),
+					area.gr.getFrecuenciasCat(),area.gr.getCategorias());
+			ad.setBounds(0, 0, dimension, dimension);
+			ad.setPreferredSize(new Dimension(dimension, dimension));
+			sc.setViewportView(ad);
+			return this;
+		}
+
+	}
+	 */
 //	private void crearButtons()
 //	{
 //		ImageIcon imgs[] = 

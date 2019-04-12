@@ -2,6 +2,7 @@ package Libreria;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -21,6 +22,7 @@ public class Grafica implements Serializable
 
 	private boolean vertical=true,deBarras=true;
 	private String categorias[];
+	private String concat;
 	private BigDecimal total = BigDecimal.ZERO;
 	private final BigDecimal CIEN = new BigDecimal("100"),PI2 = new BigDecimal(360f);
 	private Random lb = new Random();
@@ -34,6 +36,8 @@ public class Grafica implements Serializable
 	public int posicionesXYClick[][];
 	public boolean byPorcentaes;
 	private Color colorEjes;
+	private String titulo;
+	private boolean showByPorc=true;
 	
 	public static final int NORTE = 1, SUR = 2,BARRAS=2,PASTEL=1, ANCHO_MINIMO=20,ANCHO_MAXIMO=100; 
 	
@@ -51,29 +55,6 @@ public class Grafica implements Serializable
 		actualizarXY();
 	}
 	
-	
-	
-	public Grafica setFontTitle(Font f)
-	{
-		fontTitle = f;
-		return this;
-	}
-
-	public Grafica setDatosFont(Font f)
-	{
-		fontDatos = f;
-		return this;
-	}
-	
-	public Font getTitleFont()
-	{
-		return fontTitle;
-	}
-	
-	public Font getDatosFont()
-	{
-		return fontDatos;
-	}
 	
 	public void setDatos(int dispersion[], String categorias[])
 	{
@@ -107,6 +88,22 @@ public class Grafica implements Serializable
 		
 		posicionesXYClick = new int[dispersion.length][4];
 		anchoEjex=((anchoBarras+espacioBarras)*numCat+10);
+	}
+	
+	public void setAltura(int altura)
+	{
+		if(byPorcentaes)
+		{
+			mayor =  altura;
+			BigDecimal bigest = new BigDecimal(mayor);
+			
+			for(int i=0; i<numCat; i++)
+			{
+				alturasY[i] = bigest.multiply
+						(porcentajes[i]).divide(CIEN,2,RoundingMode.HALF_UP).intValue();
+			}
+			actualizarXY();
+		}
 	}
 	
 	public void setPorcentajes(BigDecimal[] porcenatajes, String cats[], int alturaGraf)
@@ -279,6 +276,28 @@ public class Grafica implements Serializable
 		else posXTitle = x  + radio/2 - 30;
 	}
 	
+	public Grafica setFontTitle(Font f)
+	{
+		fontTitle = f;
+		return this;
+	}
+
+	public Grafica setDatosFont(Font f)
+	{
+		fontDatos = f;
+		return this;
+	}
+	
+	public Font getTitleFont()
+	{
+		return fontTitle;
+	}
+	
+	public Font getDatosFont()
+	{
+		return fontDatos;
+	}
+	
 	public Grafica setDatosColor(Color c)
 	{
 		colorfuente = c;
@@ -295,8 +314,25 @@ public class Grafica implements Serializable
 	{
 		g.setFont(fontTitle);
 		g.setColor(colorTitulo);
+		this.titulo = titulo;
 		g.drawString(titulo, posXTitle,posYTitle);
 	}
+	
+	public String getTitle()
+	{
+		return titulo;
+	}
+	
+	public void toPorcentajes()
+	{
+		showByPorc=true;
+	}
+	
+	public void toDatos()
+	{
+		showByPorc=false;
+	}
+	
 	
 	public void dibujarGraficaBarras(Graphics g,int x, int y)
 	{
@@ -309,8 +345,16 @@ public class Grafica implements Serializable
 		if(numCat>0)
 			if(vertical)
 			{
-				nx=x+espacioBarras+1;
+				nx=x+espacioBarras+15;
 				g.drawLine(x, y, x, y+mayor+LINEA_SALIENTE);
+				for(int i=y+mayor,ind=0; i>=y; i-=10,ind++)
+				{
+					if(ind%5==0)
+						g.drawLine(x-10, i, x+10, i);
+					
+					else g.drawLine(x-5, i, x+5, i);
+				}
+				
 				g.drawLine(x-LINEA_SALIENTE, interseccion, 
 								anchoEjex+LINEA_SALIENTE+x, interseccion);
 				
@@ -326,6 +370,16 @@ public class Grafica implements Serializable
 			{
 				g.drawLine(x, y, x, y+anchoEjex+LINEA_SALIENTE);
 				g.drawLine(x-LINEA_SALIENTE, y+LINEA_SALIENTE, x+mayor, y+LINEA_SALIENTE);
+				
+				for(int i=x,cont=0; i<=x+mayor; i+=10,cont++)
+				{
+					if(cont%5==0)
+						g.drawLine(i, y+LINEA_SALIENTE-10, i, y+LINEA_SALIENTE+10);
+					
+					else
+						g.drawLine(i, y+LINEA_SALIENTE-5, i, y+LINEA_SALIENTE+5);
+				}
+				
 				nx = y+espacioBarras+LINEA_SALIENTE+1;
 				
 				for(i=0; i<numCat; i++)
@@ -397,7 +451,8 @@ public class Grafica implements Serializable
 	}
 	
 	//juan-jose-daniel-jose-jose-daniel-luis-luis-pedro
-	private String concat;
+	private FontMetrics fontPropierties;
+	private int widthFont;
 	private void drawCategorias(Graphics g, int x, int y,int varFuncion)
 	{
 		mayorlength=0;
@@ -406,26 +461,43 @@ public class Grafica implements Serializable
 		for(i=0; i<numCat; i++)
 		{
 			g.setColor(colores[i]);
-			concat=categorias[i]+"-"+porcentajes[i]+"%";
+			
+			concat=categorias[i]+"-";
+			
+			if(showByPorc)
+				concat+=porcentajes[i]+"%";
+			
+			else
+			{
+				if(byPorcentaes)
+					concat+=alturasY[i];
+				
+				else concat+=disp[i];
+			}
+				
+			
 			g.fill3DRect(x+20, ny, 20, 20,true);
 			g.setColor(colorfuente);
 			g.drawString(concat, x+50, ny+20);
 			
-			posicionesXYClick[i][0] = x+20;
-			posicionesXYClick[i][1] = x+50+(concat.length()*20);
+			fontPropierties = g.getFontMetrics();
 			
-			if(concat.length()>mayorlength)
-				mayorlength = concat.length();
+			widthFont = fontPropierties.stringWidth(concat);
+			posicionesXYClick[i][0] = x+20;
+			posicionesXYClick[i][1] = x+45+widthFont;
+			
+			if(widthFont>mayorlength)
+				mayorlength = widthFont;
 			
 			posicionesXYClick[i][2] = ny;
-			posicionesXYClick[i][3] = ny+20;
+			posicionesXYClick[i][3] = ny+fontPropierties.getHeight()-15;
 			
 			ny+=40;
 			
 			if(ny>y+varFuncion)
 			{
 				ny = y;
-				x+=+50+(mayorlength*20);
+				x+=mayorlength+70;
 			}
 		}
 	}

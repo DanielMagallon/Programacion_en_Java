@@ -65,7 +65,6 @@ public class Tablas extends JFrame
 				return String.class;
 			}
 			
-			@Override
 			public void addRow(Vector<?> rowData) 
 			{
 				if((Integer) rowData.get(1) <=30)

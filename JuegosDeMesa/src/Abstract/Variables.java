@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 import PerfomanceAjedrez.Alfil;
 import PerfomanceAjedrez.Caballo;
@@ -55,14 +56,8 @@ public class Variables
 	{
 		//
 		Image i=null;
-		try 
-		{
-			i = ImageIO.read(new File(System.getProperty("user.dir")+"/src/"+img));
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//i = ImageIO.read(new File(System.getProperty("user.dir")+"/src/"+img));
+		i = new ImageIcon(Variables.class.getResource(img)).getImage();
 		return i;
 	}
 }

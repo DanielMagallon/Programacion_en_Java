@@ -75,9 +75,9 @@ class Persona extends Thread
 	public void run()
 	{
 		//A nivel de objeto
-		synchronized (imp)
+//		synchronized (imp)
 		{
-			imp.print(getName());
+			imp.printSyncthis(getName());
 		}
 		
 	}

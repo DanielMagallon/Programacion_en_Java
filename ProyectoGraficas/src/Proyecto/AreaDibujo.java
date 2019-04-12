@@ -37,7 +37,7 @@ public class AreaDibujo extends JPanel implements Serializable
 	
 	private boolean imgFondo=false;
 	
-	public transient Image img;
+	private transient Image img;
 
 	private int xFig,yFig;
 	 
@@ -48,10 +48,10 @@ public class AreaDibujo extends JPanel implements Serializable
 		xFig = 100;
 		yFig = 150;
 		gr.setNewXY(xFig, yFig);
-		
 		addMouseWheelListener(evento = new Eventos());
-		addMouseListener(evento);
 		addMouseMotionListener(evento);
+		addMouseListener(evento);
+
 	}
 	
 	public void fondo(Image img)
@@ -134,7 +134,7 @@ public class AreaDibujo extends JPanel implements Serializable
 	{
 		if(gr.byPorcentaes && type == Grafica.PASTEL)
 		{
-			JOptionPane.showMessageDialog(null,"No es posible graficar por porcentajes\n"
+			JOptionPane.showMessageDialog(null,"No es posible graficar por porcentajes con barra de pasteles\n"
 					+ "Ayuda: Deshabilite la opcion de graficar por porcentaje",
 					"Graficacion no valida",JOptionPane.WARNING_MESSAGE);
 			return false;
@@ -145,6 +145,11 @@ public class AreaDibujo extends JPanel implements Serializable
 			repaint();
 			return true;
 		}
+	}
+	
+	public int getTypheGraph()
+	{
+		return TYPO_GRAFICA;
 	}
 	
 	public void setPositionTitle(int p)
@@ -166,7 +171,7 @@ public class AreaDibujo extends JPanel implements Serializable
 
 		if(imgFondo)
 			g2d.drawImage(img, 0, 0, getWidth(), getHeight(), this);
-		
+
 		gr.setTitle(g2d, cad);
 		
 		if(TYPO_GRAFICA == 1)
@@ -194,8 +199,27 @@ public class AreaDibujo extends JPanel implements Serializable
 	{
 		try
 		{
-			File f = new File(PathGeneral.rutaRecursos.getPath()+"/ImagesCreadas/img");
+			String title = gr.getTitle();
+			
+			while(title.trim().isEmpty())
+			{
+					title = JOptionPane.showInputDialog(null, "Nombre de la imagen: ",
+							"Guardando como imagen");
+				
+				if(title==null)
+					return;
+					
+				if((title.trim().isEmpty()))
+				JOptionPane.showMessageDialog(null,"Tiene que especificar un nombre a la imagen",
+						"Error",JOptionPane.ERROR_MESSAGE);
+				
+				 
+			}
+			
+			
+			File f = new File(PathGeneral.rutaRecursos.getPath()+"/ImagesCreadas/"+title+".png");
 			ImageIO.write(bi, "png", f);
+			
 		} catch (Exception e)
 		{
 			e.printStackTrace();
@@ -249,11 +273,33 @@ public class AreaDibujo extends JPanel implements Serializable
 		}
 		
 		@Override
+		public void mouseClicked(MouseEvent e)
+		{
+			
+			if(e.getClickCount()==2)
+			{
+				xFig = e.getX();
+				yFig = e.getY();
+				
+				gr.setNewXY(xFig, yFig);
+				
+				AreaDibujo.this.repaint();
+			}
+		}
+		
+		@Override
 		public void mousePressed(MouseEvent e)
 		{
-			if(e.getButton() == MouseEvent.BUTTON3)
-			{
-				if(gr.posicionesXYClick!=null)
+				if(getCursor()==Appi.cursorSeleccion)
+				{
+					popupMenu.show(AreaDibujo.this, e.getX(), e.getY());
+				}
+		}
+		
+		@Override
+		public void mouseMoved(MouseEvent e)
+		{
+			if(gr.posicionesXYClick!=null)
 				for(int i=0; i<gr.posicionesXYClick.length; i++)
 				{
 					
@@ -264,12 +310,14 @@ public class AreaDibujo extends JPanel implements Serializable
 					{
 						indice = i;
 						color = gr.getColores()[i];
-						popupMenu.show(AreaDibujo.this, e.getX(), e.getY());
+						setCursor(Appi.cursorSeleccion);
 						break;
+					}else {
+						setCursor(null);
 					}
 				}
-			}
 		}
+		
 		
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent e)
@@ -281,16 +329,22 @@ public class AreaDibujo extends JPanel implements Serializable
 		}
 		
 		@Override
+		public void mouseReleased(MouseEvent e)
+		{
+			setCursor(null);
+		}
+		
+		@Override
 		public void mouseDragged(MouseEvent e)
 		{
-			{
-				xFig= e.getX();
-				yFig = e.getY();
-	
-				gr.setNewXY(xFig, yFig);
-				
-				AreaDibujo.this.repaint();
-			}
+			setCursor(Appi.cursorCruz);
+			xFig= e.getX();
+			yFig = e.getY();
+
+			gr.setNewXY(xFig, yFig);
+			
+			AreaDibujo.this.repaint();
 		}
+		
 	}
 }

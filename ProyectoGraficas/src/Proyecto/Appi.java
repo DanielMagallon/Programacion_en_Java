@@ -2,24 +2,29 @@ package Proyecto;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -29,11 +34,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
-import javax.swing.SwingUtilities;
+import javax.swing.KeyStroke;
+import javax.swing.Timer;
 import javax.swing.border.TitledBorder;
 
 import Libreria.Grafica;
@@ -41,52 +45,68 @@ import Libreria.Grafica;
 public class Appi extends JFrame
 {
 	private static final long serialVersionUID = -6345646015769705197L;
-	
+
 	private Pestanas pestanas;
 	private JPanel panelFunciones;
 	private JMenuBar menuBar;
-	private JSplitPane split;
 	private ActionListener[] actionesSecun;
 	private Categorias tablaCategorias;
-	private PanelFondos fondos;
-
-	private JToggleButton togglePastel, toggleBarras;
+	public PanelFondos fondos;
+	public JToggleButton togglePastel, toggleBarras,togglePorce;
 	private JRadioButton rdNorte, rdSur;
-	private JButton btnAumentar, btnDecre, btnTablaCategrias, btnNuevaG, btnRefres, btnCerrar, btnRotarD, btnRotarIz;
+	private JButton btnAumentar, btnDecre, btnTablaCategrias, btnNuevaG, btnRefres, 
+		btnCerrar, btnRotarD, btnRotarIz;
 
-	private Propiedades dialogFuentes;
+	public static Cursor cursorCruz,cursorSeleccion;
 
-	private int opc;
+	private AboutWindow aboutW;
 	
+	public JCheckBoxMenuItem mtcVisible;	
+	private int opc;
+
 	public static JComboBox<Integer> comboEspacios;
 
 	private JTextField txtTitulo;
 
-	public Appi(String path)
+	private Clipboard portapapeles;
+	public Transferable datos;
+	
+	private ClosingListener closList;
+	
+	private Timer timer;
+	
+	public Appi(String path, boolean showHelp)
 	{
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		super("Integrantes: Edgar Daniel Magallon V., Bryant Lopez, Brandon Said Onofre Segura");
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		setExtendedState(MAXIMIZED_BOTH);
 		setResizable(false);
 		setLayout(new BorderLayout(10, 10));
-
+		
+		closList = new ClosingListener();
+		aboutW = new AboutWindow(this);
+		
+		
+		cursorCruz = new Cursor(Cursor.MOVE_CURSOR);
+		cursorSeleccion = new Cursor(Cursor.HAND_CURSOR);
+		
+		addWindowListener(closList);
+		
 		opc = Grafica.BARRAS;
 		panelFunciones = new JPanel();
 
 		tablaCategorias = new Categorias(path);
 
-		pestanas = new Pestanas(tablaCategorias);
-		dialogFuentes = new Propiedades(this,pestanas);
+		pestanas = new Pestanas(tablaCategorias,this);
+		pestanas.setBackground(Color.white);
+		
 		tablaCategorias.setTabbed(pestanas);
 
 		fondos = new PanelFondos(pestanas);
 
-		JScrollPane sc = new JScrollPane(fondos);
-		sc.setPreferredSize(new Dimension(140, 100));
-
-		split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		split.setRightComponent(pestanas);
-		split.setLeftComponent(sc);
-		add(split, "Center");
+		add(pestanas, "Center");
+		add(fondos,"South");
+		fondos.setVisible(false);
 
 		accionesSecundarias();
 		funciones();
@@ -94,18 +114,31 @@ public class Appi extends JFrame
 		eventos();
 
 		habilitarBotones(false);
-	}
-	
-	public Appi(String path,String file)
-	{
-		this(path);
+		setVisible(true);
 		
-		pestanas.crearConArchivo(path,file);
+		if(showHelp)
+		{
+			timer = new Timer(3000, (a)-> 
+			{
+				aboutW.setVisible(true);
+				timer.stop();
+				timer=null;
+			});
+			timer.start();
+		}
+		
+	}
+
+	public Appi(String path, String file, boolean show)
+	{
+		this(path,show);
+		pestanas.openWithFile(file);
 	}
 
 	private void accionesSecundarias()
 	{
-		actionesSecun = new ActionListener[] { (a) -> {
+		actionesSecun = new ActionListener[] { (a) -> 
+		{
 			pestanas.crear();
 
 			if (!rdNorte.isEnabled())
@@ -120,12 +153,11 @@ public class Appi extends JFrame
 						pestanas.getAreaDibujo().crearPNG();
 					} else
 					{
-						JOptionPane.showMessageDialog(this, "No se ha cargado ninguna grafica", "Imagen: null",
+						JOptionPane.showMessageDialog(this, "No se ha cargado ninguna grafica", 
+								"Imagen: null",
 								JOptionPane.ERROR_MESSAGE);
 					}
 				},
-
-				(a) -> dialogFuentes.setVisible(true),
 
 				(a) -> {
 					pestanas.cerrar();
@@ -134,15 +166,60 @@ public class Appi extends JFrame
 					{
 						habilitarBotones(false);
 					}
+				},
+
+				(a) -> 
+				{
+					obtenerDatosPortapapeles();
+				}, 
+				
+				(a)->
+				{
+					fondos.setVisible(mtcVisible.isSelected());
+					validate();
 				}
 
 		};
 
 	}
 
+	private void obtenerDatosPortapapeles()
+	{
+		if(checkValidPortapeles())
+		{
+			try
+			{
+				String ruta = datos.getTransferData(DataFlavor.stringFlavor).toString();
+				
+				String files[] = ruta.split("\n");
+				
+				for(String r : files)
+					pestanas.openWithFile(r);
+				
+				habilitarBotones(true);
+				
+			} catch (UnsupportedFlavorException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public boolean checkValidPortapeles()
+	{
+		portapapeles = Toolkit.getDefaultToolkit().getSystemClipboard();
+		datos = portapapeles.getContents(null);
+		
+		return (datos.isDataFlavorSupported(DataFlavor.stringFlavor));
+	}
+
 	private void eventos()
 	{
-
 		btnRotarD.addActionListener((a) -> {
 			if (togglePastel.isSelected())
 				pestanas.getAreaDibujo().rotar(-45);
@@ -166,20 +243,28 @@ public class Appi extends JFrame
 		btnDecre.addActionListener((a) -> {
 			pestanas.getAreaDibujo().disminuir();
 		});
+		
+		togglePorce.addActionListener((a)->{
+			
+			if(togglePorce.isSelected())
+				pestanas.getAreaDibujo().gr.toPorcentajes();
+			
+			else pestanas.getAreaDibujo().gr.toDatos();
+			
+			pestanas.getAreaDibujo().repaint();
+		});
 	}
 
 	@SuppressWarnings("serial")
 	private void funciones()
 	{
 		add(panelFunciones, "North");
-
 		TitledBorder tl = new TitledBorder(BorderFactory.createLineBorder(Color.black));
 		tl.setTitle("FUNCIONES");
 		tl.setTitleJustification(TitledBorder.CENTER);
 
 		panelFunciones.setBorder(tl);
-
-		// panelFunciones.setLayout(new GridLayout(1,2,10,0));
+		panelFunciones.setBackground(Color.white);
 		panelFunciones.setLayout(new BorderLayout());
 
 		JPanel panelDatosG = new JPanel()
@@ -188,7 +273,7 @@ public class Appi extends JFrame
 			{
 				super.paintComponents(g);
 				Graphics2D g2d = (Graphics2D) g;
-				g2d.setPaint(new GradientPaint(200, 0, Color.WHITE, 200, 100, Color.BLUE));
+				g2d.setPaint(new GradientPaint(200, 0, Color.cyan, 200, 100, Color.yellow));
 				g2d.fillRect(3, 8, this.getWidth(), this.getHeight() - 10);
 			}
 		};
@@ -203,14 +288,16 @@ public class Appi extends JFrame
 			panelDatosG.setPreferredSize(new Dimension(300, 110));
 
 			btnNuevaG = new JButton(getImageIcon("new.png"));
+			btnNuevaG.setToolTipText("Nueva grafica");
 			btnNuevaG.setBackground(Color.white);
 			btnNuevaG.addActionListener(actionesSecun[0]);
 			btnNuevaG.setBounds(20, 20, 36, 36);
 
 			btnCerrar = new JButton(getImageIcon("error.png"));
+			btnCerrar.setToolTipText("Cerrar pestaña");
 			btnCerrar.setBackground(Color.white);
 			btnCerrar.setBounds(20, 60, 36, 36);
-			btnCerrar.addActionListener(actionesSecun[3]);
+			btnCerrar.addActionListener(actionesSecun[2]);
 
 			JLabel lblTitulo = new JLabel("Titulo Grafica");
 			lblTitulo.setBounds(110, 35, 100, 10);
@@ -233,7 +320,8 @@ public class Appi extends JFrame
 				}
 			});
 
-			btnTablaCategrias = new JButton(getImageIcon("barras.png"));
+			btnTablaCategrias = new JButton(getImageIcon("table.png"));
+			btnTablaCategrias.setToolTipText("Agregar categorias");
 			btnTablaCategrias.setBackground(Color.white);
 			btnTablaCategrias.addActionListener((a) -> {
 				tablaCategorias.setAreaDibujo(pestanas.getAreaDibujo());
@@ -245,6 +333,7 @@ public class Appi extends JFrame
 			btnTablaCategrias.setEnabled(false);
 
 			btnRefres = new JButton(getImageIcon("refresh.png"));
+			btnRefres.setToolTipText("Refrescar");
 			btnRefres.setBackground(Color.white);
 			btnRefres.setBounds(245, 60, 36, 36);
 			btnRefres.addActionListener((a) -> {
@@ -267,7 +356,7 @@ public class Appi extends JFrame
 			{
 				super.paintComponents(g);
 				Graphics2D g2d = (Graphics2D) g;
-				g2d.setPaint(new GradientPaint(200, 20, Color.WHITE, 200, 400, Color.BLACK));
+				g2d.setPaint(new GradientPaint(200, 20, Color.white, 200, 400, Color.black));
 				g2d.fillRect(3, 8, this.getWidth(), this.getHeight() - 10);
 			}
 		};
@@ -283,11 +372,11 @@ public class Appi extends JFrame
 			JLabel lblTamaño = new JLabel("Escalar grafica");
 			lblTamaño.setBounds(20, 15, 110, 35);
 
-			btnAumentar = new JButton(getImageIcon("barras.png"));
+			btnAumentar = new JButton(getImageIcon("plus.png"));
 			btnAumentar.setBackground(Color.white);
 			btnAumentar.setBounds(25, 45, 36, 36);
 
-			btnDecre = new JButton(getImageIcon("barras.png"));
+			btnDecre = new JButton(getImageIcon("minus.png"));
 			btnDecre.setBackground(Color.white);
 			btnDecre.setBounds(75, 45, 36, 36);
 
@@ -307,13 +396,12 @@ public class Appi extends JFrame
 			togglePastel = new JToggleButton(getImageIcon("pastel.png"));
 			togglePastel.setBounds(255, 45, 36, 36);
 			togglePastel.setBackground(Color.white);
-			togglePastel.addActionListener((a) -> 
-			{
-				if(pestanas.getAreaDibujo().setTypeGraph(Grafica.PASTEL))
+			togglePastel.addActionListener((a) -> {
+				if (pestanas.getAreaDibujo().setTypeGraph(Grafica.PASTEL))
 				{
 					opc = Grafica.PASTEL;
-				}
-				else toggleBarras.setSelected(true);
+				} else
+					toggleBarras.setSelected(true);
 			});
 
 			{
@@ -360,18 +448,27 @@ public class Appi extends JFrame
 			btnRotarD.setBackground(Color.white);
 
 			JLabel lblEsp = new JLabel("Espaciado barras");
-			lblEsp.setBounds(675,15,170,30);
-			comboEspacios = new JComboBox<Integer>(new Integer[] {0,10,20,30,40,50,60,70,80,90,100});
-			comboEspacios.setBounds(675,55,120,20);
-			comboEspacios.addItemListener((a)->
-			
-					{
-						pestanas.getAreaDibujo().espaciado(
-								Integer.valueOf(comboEspacios.getSelectedItem().toString()));
-					}
-			
-			);
+			lblEsp.setBounds(655, 15, 170, 30);
+			comboEspacios = new JComboBox<Integer>(new Integer[] { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 });
+			comboEspacios.setBounds(675, 55, 80, 20);
+			comboEspacios.addItemListener((a) ->
 
+			{
+				pestanas.getAreaDibujo().espaciado(Integer.valueOf(comboEspacios.getSelectedItem().toString()));
+			}
+
+			);
+			
+			JLabel lbPor = new JLabel("Mostrar porcentajes");
+			lbPor.setBounds(815, 15, 170, 30);
+			togglePorce = new JToggleButton(getImageIcon("porcen.png"));
+			togglePorce.setBounds(850, 45, 36, 36);
+			togglePorce.setBackground(Color.white);
+			togglePorce.setSelected(true);
+			
+			
+			panelCongG.add(lbPor);
+			panelCongG.add(togglePorce);
 			panelCongG.add(btnRotarD);
 			panelCongG.add(btnRotarIz);
 			panelCongG.add(rotar);
@@ -395,6 +492,7 @@ public class Appi extends JFrame
 	private void habilitarBotones(boolean h)
 	{
 		toggleBarras.setEnabled(h);
+		btnCerrar.setEnabled(h);
 		togglePastel.setEnabled(h);
 		btnTablaCategrias.setEnabled(h);
 		rdNorte.setEnabled(h);
@@ -405,33 +503,59 @@ public class Appi extends JFrame
 		btnRotarIz.setEnabled(h);
 		btnRefres.setEnabled(h);
 		comboEspacios.setEnabled(h);
+		togglePorce.setEnabled(h);
 	}
-
+	
 	private void menuBar()
 	{
+		
 		menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 
-		JMenu menu = new JMenu("Arhivo");
+		JMenu menu = new JMenu("Archivo");
 
 		menuBar.add(menu);
 
 		JMenuItem mt1 = new JMenuItem("Nueva grafica");
+		mt1.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,ActionEvent.CTRL_MASK));
+		
+		JMenuItem mt4 = new JMenuItem("Cerrar pestaña");
+		mt4.addActionListener(actionesSecun[2]);
+		
 		JMenuItem mt2 = new JMenuItem("Exportar como imagen");
-
+		
+		JMenuItem mt3 = new JMenuItem("Pegar archivo");
+		
+		
+		
+		mtcVisible = new JCheckBoxMenuItem("Activar panel configuraciones");
+		mtcVisible.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_M,ActionEvent.CTRL_MASK));
+		
+		
+		mt3.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V,ActionEvent.CTRL_MASK));
 		menu.add(mt1);
+		menu.add(mt4);
 		menu.add(mt2);
-
+		menu.add(mt3);
+		menu.add(mtcVisible);
+		
 		mt1.addActionListener(actionesSecun[0]);
 		mt2.addActionListener(actionesSecun[1]);
+		mt3.addActionListener(actionesSecun[3]);
+		mtcVisible.addActionListener(actionesSecun[4]);
 
-		JMenu menuEdi = new JMenu("Editar");
-		menuBar.add(menuEdi);
 
-		JMenuItem menuF = new JMenuItem("Fuente");
-		menuEdi.add(menuF);
-
-		menuF.addActionListener(actionesSecun[2]);
+		menu.addSeparator();
+		
+		JMenuItem mtClose = new JMenuItem("Cerrar programa");
+		menu.add(mtClose);
+		mtClose.addActionListener((a)->closList.windowClosing(null));
+		
+		JMenu ayuda = new JMenu("Ayuda");
+		JMenuItem about = new JMenuItem("Acerca de",getImageIcon("about.png"));
+		about.addActionListener((a)->aboutW.setVisible(true));
+		ayuda.add(about);
+		menuBar.add(ayuda);
 	}
 
 	public static ImageIcon getImageIcon(String nombre)
@@ -446,78 +570,18 @@ public class Appi extends JFrame
 		}
 	}
 
-	public static void copy(File sourceLocation, File targetLocation,String mk) throws IOException {
-	    if (sourceLocation.isDirectory()) {
-	        copyDirectory(sourceLocation, targetLocation,mk);
-	    } else {
-	        copyFile(sourceLocation, targetLocation);
-	    }
+	class ClosingListener extends WindowAdapter
+	{
+		@Override
+		public void windowClosing(WindowEvent e)
+		{
+			int opc = JOptionPane.showConfirmDialog(Appi.this, 
+					"Esta seguro que desea cerrar la aplicacion?",
+					"Cerrando app",JOptionPane.YES_NO_OPTION);
+			
+			if(opc==JOptionPane.YES_OPTION)
+				System.exit(0);
+		}
 	}
 	
-	private static  void copyDirectory(File source, File target,String mk) throws IOException 
-	{
-		File carpeta = new File(target.getPath()+"/"+mk+"/");
-	    carpeta.mkdir();
-
-	    for (String f : source.list()) {
-	        copy(new File(source, f), new File(carpeta, f),mk);
-	    }
-	    
-	}
-
-	private static void copyFile(File source, File target) throws IOException {        
-	    try (
-	            InputStream in = new FileInputStream(source);
-	            OutputStream out = new FileOutputStream(target)
-	    ) {
-	        byte[] buf = new byte[1024];
-	        int length;
-	        while ((length = in.read(buf)) > 0) {
-	            out.write(buf, 0, length);
-	        }
-	        source.delete();
-	        out.close();
-	        in.close();
-	    }
-	}
-	
-
-	public static void main(String[] args)
-	{
-		SwingUtilities.invokeLater(
-				
-				()-> 
-				{
-					if(args.length==0)
-					{
-						System.out.println("Abriendo aplicion natal");
-						
-						 new PathGeneral((a)-> 
-						 {
-							 try
-							 {
-								 new Appi(a).setVisible(true);
-							 }catch (Exception e) {
-								 JOptionPane.showMessageDialog(null, "Ha ocurrudo un error "+e.getMessage());
-								 e.printStackTrace();
-							}
-						 });
-					}
-					else
-					{
-						System.out.println("Abriendo aplicacion desde el archivo: "+args[0]+args[1]);
-						 
-						try
-						 {
-							 PathGeneral.rutaRecursos = new File(args[0]);
-							 new Appi(args[0],args[1]).setVisible(true);
-						 }catch (Exception e) {
-							 JOptionPane.showMessageDialog(null, "Ha ocurrudo un error "+e.getMessage());
-							 e.printStackTrace();
-						}
-					}
-				}
-				
-				);
-	}
 }
